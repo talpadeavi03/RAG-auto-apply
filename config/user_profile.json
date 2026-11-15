@@ -1,0 +1,47 @@
+{
+  "full_name": "Senior Software Engineer",
+  "email": "engineer@example.com",
+  "phone": "+91 9876543210",
+  "location": "Bangalore, India",
+  "linkedin_url": "https://linkedin.com/in/software-engineer",
+  "github_username": "sudo69",
+  "portfolio_url": "https://github.com/sudo69",
+  "years_of_experience": 3.5,
+  "notice_period_days": 15,
+  "current_ctc": "15 LPA",
+  "expected_ctc": "25 LPA",
+  "current_company": "Tech Innovations",
+  "current_title": "Software Engineer",
+  "skills": [
+    "Python",
+    "FastAPI",
+    "TypeScript",
+    "React",
+    "Docker",
+    "Kubernetes",
+    "PostgreSQL",
+    "Redis",
+    "RAG",
+    "LLM Integration",
+    "CI/CD",
+    "Git"
+  ],
+  "target_titles": [
+    "Software Engineer",
+    "Backend Developer",
+    "Full Stack Engineer",
+    "AI/ML Systems Engineer"
+  ],
+  "target_locations": [
+    "Bangalore",
+    "Hyderabad",
+    "Remote"
+  ],
+  "work_authorization": "Authorized to work in India",
+  "requires_sponsorship": false,
+  "custom_qa": {
+    "Are you comfortable working in a hybrid model?": "Yes",
+    "Do you have experience with cloud platforms?": "Yes, extensive hands-on experience with AWS and GCP.",
+    "Notice period": "15 days"
+  }
+}

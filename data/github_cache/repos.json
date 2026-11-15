@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Def",
+    "full_name": "sudo69/Def",
+    "description": "This Repo is for teaching student and the beginners about the functions in python",
+    "html_url": "https://github.com/sudo69/Def",
+    "stars": 0,
+    "language": "Python",
+    "topics": [],
+    "readme_summary": "# Def\nThis Repo is for teaching student and the beginners about the functions in python",
+    "key_technologies": []
+  },
+  {
+    "name": "AutomateWithPython",
+    "full_name": "sudo69/AutomateWithPython",
+    "description": "Automation",
+    "html_url": "https://github.com/sudo69/AutomateWithPython",
+    "stars": 0,
+    "language": "Python",
+    "topics": [],
+    "readme_summary": "this code will input some simple value in list as user input",
+    "key_technologies": []
+  },
+  {
+    "name": "Hello-World",
+    "full_name": "sudo69/Hello-World",
+    "description": "My First Repo",
+    "html_url": "https://github.com/sudo69/Hello-World",
+    "stars": 0,
+    "language": "",
+    "topics": [],
+    "readme_summary": "# Hello-World\nMy First Repo",
+    "key_technologies": []
+  }
+]

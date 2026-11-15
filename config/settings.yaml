@@ -1,0 +1,56 @@
+# RAG-AG-Apply Configuration
+
+general:
+  headless_browser: false
+  browser_timeout_ms: 30000
+  max_applications_per_run: 20
+  min_match_score: 0.65
+  user_data_dir: "data/browser_sessions"
+
+github:
+  username: "sudo69"
+  token: ""
+  max_repos: 10
+  include_forks: false
+
+linkedin:
+  enabled: true
+  email: ""
+  password: ""
+  target_titles:
+    - "Software Engineer"
+    - "Full Stack Developer"
+    - "Backend Engineer"
+    - "AI Engineer"
+  locations:
+    - "Remote"
+    - "India"
+  experience_levels:
+    - "Associate"
+    - "Mid-Senior level"
+  auto_easy_apply: true
+
+naukri:
+  enabled: true
+  email: ""
+  password: ""
+  keywords:
+    - "Python"
+    - "FastAPI"
+    - "Full Stack"
+    - "React"
+    - "AI"
+  locations:
+    - "Bangalore"
+    - "Hyderabad"
+    - "Pune"
+    - "Remote"
+  min_experience_years: 1
+  max_experience_years: 5
+  auto_apply: true
+
+agy_assistant:
+  binary_path: "/home/sudo69/.local/bin/agy"
+  enabled: true
+  interactive_mode: true
+  auto_generate_dossier: true

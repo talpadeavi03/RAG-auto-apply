@@ -1,0 +1,77 @@
+{
+  "docs": [
+    {
+      "doc_id": "github_repo_Def",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: Def (Python)",
+      "content": "Project Name: Def\nLanguage: Python\nStars: 0\nDescription: This Repo is for teaching student and the beginners about the functions in python\nREADME Highlights:\n# Def\nThis Repo is for teaching student and the beginners about the functions in python\nURL: https://github.com/sudo69/Def",
+      "metadata": {
+        "name": "Def",
+        "language": "Python",
+        "stars": 0,
+        "url": "https://github.com/sudo69/Def"
+      }
+    },
+    {
+      "doc_id": "github_repo_AutomateWithPython",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: AutomateWithPython (Python)",
+      "content": "Project Name: AutomateWithPython\nLanguage: Python\nStars: 0\nDescription: Automation\nREADME Highlights:\nthis code will input some simple value in list as user input\nURL: https://github.com/sudo69/AutomateWithPython",
+      "metadata": {
+        "name": "AutomateWithPython",
+        "language": "Python",
+        "stars": 0,
+        "url": "https://github.com/sudo69/AutomateWithPython"
+      }
+    },
+    {
+      "doc_id": "github_repo_Hello-World",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: Hello-World ()",
+      "content": "Project Name: Hello-World\nLanguage: \nStars: 0\nDescription: My First Repo\nREADME Highlights:\n# Hello-World\nMy First Repo\nURL: https://github.com/sudo69/Hello-World",
+      "metadata": {
+        "name": "Hello-World",
+        "language": "",
+        "stars": 0,
+        "url": "https://github.com/sudo69/Hello-World"
+      }
+    },
+    {
+      "doc_id": "resume_master",
+      "source_type": "resume",
+      "title": "Complete Resume Master",
+      "content": "# Senior Software Engineer\n\n**Email:** engineer@example.com | **Phone:** +91 9876543210 | **Location:** Bangalore, India  \n**GitHub:** [github.com/sudo69](https://github.com/sudo69) | **LinkedIn:** [linkedin.com/in/software-engineer](https://linkedin.com)\n\n---\n\n## Professional Summary\nSoftware Engineer with 3.5+ years of experience in architecting distributed backend services, full-stack web applications, and AI/RAG-driven workflows. Proven record in reducing API latency, containerizing microservices, and leading high-velocity deployments.\n\n---\n\n## Technical Skills\n- **Languages:** Python, TypeScript, JavaScript, SQL, Bash\n- **Frameworks & Libraries:** FastAPI, Flask, Django, React, Next.js, Node.js, PyTorch\n- **AI & RAG:** LLM API Integrations, Vector Databases (Chroma, FAISS), Retrieval-Augmented Generation, LangChain\n- **Databases & Caching:** PostgreSQL, MySQL, Redis, MongoDB\n- **DevOps & Cloud:** Docker, Kubernetes, AWS (EC2, S3, RDS), GitHub Actions, Terraform, Linux\n\n---\n\n## Work History\n### **Software Engineer | Tech Innovations** (2022 \u2013 Present)\n- Designed and maintained high-throughput RESTful microservices using FastAPI and PostgreSQL handling 20M+ monthly requests.\n- Integrated RAG-powered semantic search pipelines improving internal query relevance by 45%.\n- Reduced database read latencies by 35% through Redis caching layers and query index optimizations.\n- Orchestrated containerized deployments via Docker and Kubernetes on AWS.\n\n### **Associate Software Developer | CloudScale Labs** (2021 \u2013 2022)\n- Built interactive client-facing dashboards in React with real-time WebSocket feeds.\n- Automated CI/CD pipelines using GitHub Actions, cutting release deployment cycles by 50%.\n\n---\n\n## Featured GitHub & Open Source Projects\n- **RAG-AG-Apply:** Autonomous job application and profile synchronization system using RAG knowledge bases and Antigravity CLI.\n- **Distributed Cache Engine:** Lightweight high-concurrency key-value store in Python and Redis.\n- **API Gateway Starter:** Production-grade gateway supporting rate limiting, JWT validation, and reverse proxy routing.\n\n---\n\n## Education\n**Bachelor of Technology (B.Tech) in Computer Science & Engineering**  \nFirst Class with Distinction\n",
+      "metadata": {
+        "filename": "sample_resume.md",
+        "type": "master"
+      }
+    },
+    {
+      "doc_id": "resume_sec_##",
+      "source_type": "resume",
+      "title": "Resume Section: ##",
+      "content": "Education",
+      "metadata": {
+        "section": "##"
+      }
+    },
+    {
+      "doc_id": "resume_sec_-_**languages:**_python,_typescript,_javascript,_sql,_bash\n-_**frameworks_&_libraries:**_fastapi,_flask,_django,_react,_next.js,_node.js,_pytorch\n-_**ai_&_rag:**_llm_api_integrations,_vector_databases_(chroma,_faiss),_retrieval-augmented_generation,_langchain\n-_**databases_&_caching:**_postgresql,_mysql,_redis,_mongodb\n-_**devops_&_cloud:**_docker,_kubernetes,_aws_(ec2,_s3,_rds),_github_actions,_terraform,_linux\n\n---",
+      "source_type": "resume",
+      "title": "Resume Section: - **languages:** python, typescript, javascript, sql, bash\n- **frameworks & libraries:** fastapi, flask, django, react, next.js, node.js, pytorch\n- **ai & rag:** llm api integrations, vector databases (chroma, faiss), retrieval-augmented generation, langchain\n- **databases & caching:** postgresql, mysql, redis, mongodb\n- **devops & cloud:** docker, kubernetes, aws (ec2, s3, rds), github actions, terraform, linux\n\n---",
+      "content": "##",
+      "metadata": {
+        "section": "- **languages:** python, typescript, javascript, sql, bash\n- **frameworks & libraries:** fastapi, flask, django, react, next.js, node.js, pytorch\n- **ai & rag:** llm api integrations, vector databases (chroma, faiss), retrieval-augmented generation, langchain\n- **databases & caching:** postgresql, mysql, redis, mongodb\n- **devops & cloud:** docker, kubernetes, aws (ec2, s3, rds), github actions, terraform, linux\n\n---"
+      }
+    },
+    {
+      "doc_id": "resume_sec_work_history",
+      "source_type": "resume",
+      "title": "Resume Section: Work history",
+      "content": "### **Software Engineer | Tech Innovations** (2022 \u2013 Present)\n- Designed and maintained high-throughput RESTful microservices using FastAPI and PostgreSQL handling 20M+ monthly requests.\n- Integrated RAG-powered semantic search pipelines improving internal query relevance by 45%.\n- Reduced database read latencies by 35% through Redis caching layers and query index optimizations.\n- Orchestrated containerized deployments via Docker and Kubernetes on AWS.\n\n### **Associate Software Developer | CloudScale Labs** (2021 \u2013 2022)\n- Built interactive client-facing dashboards in React with real-time WebSocket feeds.\n- Automated CI/CD pipelines using GitHub Actions, cutting release deployment cycles by 50%.\n\n---\n\n## Featured GitHub & Open Source Projects\n- **RAG-AG-Apply:** Autonomous job application and profile synchronization system using RAG knowledge bases and Antigravity CLI.\n- **Distributed Cache Engine:** Lightweight high-concurrency key-value store in Python and Redis.\n- **API Gateway Starter:** Production-grade gateway supporting rate limiting, JWT validation, and reverse proxy routing.\n\n---",
+      "metadata": {
+        "section": "work history"
+      }
+    }
+  ]
+}

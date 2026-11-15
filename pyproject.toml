@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-ag-apply"
+version = "1.0.0"
+description = "RAG & GitHub-powered automated job application & profile updater for LinkedIn and Naukri with Antigravity CLI assistance"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "playwright>=1.40.0",
+    "beautifulsoup4>=4.12.0",
+    "requests>=2.31.0",
+    "pyyaml>=6.0.1",
+    "rich>=13.7.0",
+    "typer>=0.9.0",
+    "pydantic>=2.5.0"
+]
+
+[project.scripts]
+rag-apply = "src.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
