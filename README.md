@@ -159,7 +159,7 @@ The entire pipeline runs autonomously via GitHub Actions.
 ### Configured Workflows
 
 1. **`daily-job-pipeline.yml`**:
-   - **Trigger:** Scheduled twice daily (Mon-Fri 10:00 AM & 5:30 PM IST) and on manual dispatch.
+   - **Trigger:** Scheduled every 4 hours daily (`0 */4 * * *`) and on manual dispatch.
    - **Actions:**
      - Bootstraps Antigravity CLI (`agy`) directly on the Ubuntu runner via `curl -fsSL https://antigravity.google/cli/install.sh | bash`.
      - Ingests latest GitHub repositories and resume into the RAG index.
