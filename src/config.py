@@ -65,6 +65,11 @@ class Settings:
                     self._deep_update(default_settings, user_cfg)
             except Exception as e:
                 print(f"[Warning] Failed to load {self.settings_file}: {e}")
+
+        # If running in CI or headless environment without DISPLAY, force headless mode
+        if is_ci or not os.getenv("DISPLAY"):
+            default_settings["general"]["headless_browser"] = True
+
         return default_settings
 
     def _load_profile(self) -> CandidateProfile:

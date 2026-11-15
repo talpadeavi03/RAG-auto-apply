@@ -26,13 +26,14 @@ class LinkedInProfileUpdater:
             return True
 
         self.user_data_dir.mkdir(parents=True, exist_ok=True)
-        headless = settings.config_data.get("general", {}).get("headless_browser", False)
+        is_ci = os.getenv("CI", "false").lower() == "true" or os.getenv("HEADLESS", "false").lower() == "true" or not os.getenv("DISPLAY")
+        headless = True if is_ci else settings.config_data.get("general", {}).get("headless_browser", False)
 
         with sync_playwright() as p:
             browser = p.chromium.launch_persistent_context(
                 user_data_dir=str(self.user_data_dir),
                 headless=headless,
-                args=["--disable-blink-features=AutomationControlled"]
+                args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
             )
             page = browser.new_page()
             try:

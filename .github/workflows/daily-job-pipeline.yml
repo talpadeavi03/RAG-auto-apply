@@ -90,7 +90,7 @@ jobs:
         run: |
           echo "=== Refreshing Profiles (Naukri Timestamp Bump & LinkedIn Sync) ==="
           TARGET_PLATFORM="${{ github.event.inputs.platform || 'both' }}"
-          rag-apply profile update --platform "$TARGET_PLATFORM"
+          xvfb-run --auto-servernum rag-apply profile update --platform "$TARGET_PLATFORM" || true
 
       - name: Run Autonomous Job Applications
         if: ${{ github.event.inputs.mode != 'profile-update-only' }}
@@ -99,7 +99,7 @@ jobs:
           TARGET_PLATFORM="${{ github.event.inputs.platform || 'both' }}"
           LIMIT="${{ github.event.inputs.limit || '10' }}"
           MIN_SCORE="${{ github.event.inputs.min_score || '0.65' }}"
-          rag-apply apply --platform "$TARGET_PLATFORM" --limit "$LIMIT" --min-score "$MIN_SCORE"
+          xvfb-run --auto-servernum rag-apply apply --platform "$TARGET_PLATFORM" --limit "$LIMIT" --min-score "$MIN_SCORE" || true
 
       - name: Generate Job Run Summary & Step Summary
         if: always()

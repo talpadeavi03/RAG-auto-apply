@@ -61,7 +61,7 @@ jobs:
       - name: Run Antigravity CLI External Application Assistant
         run: |
           echo "=== Generating Application Dossier & Invoking Antigravity CLI ==="
-          rag-apply assist \
+          xvfb-run --auto-servernum rag-apply assist \
             --url "${{ github.event.inputs.url }}" \
             --company "${{ github.event.inputs.company }}" \
             --title "${{ github.event.inputs.title }}"
