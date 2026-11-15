@@ -29,13 +29,26 @@ class NaukriApplyEngine(BaseJobEngine):
         is_ci = os.getenv("CI", "false").lower() == "true" or os.getenv("HEADLESS", "false").lower() == "true" or not os.getenv("DISPLAY")
         headless = True if is_ci else settings.config_data.get("general", {}).get("headless_browser", False)
 
+        state_file = DATA_DIR / "browser_sessions" / "naukri_state.json"
+
         with sync_playwright() as p:
-            browser = p.chromium.launch_persistent_context(
-                user_data_dir=str(self.user_data_dir),
-                headless=headless,
-                args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
-            )
-            page = browser.new_page()
+            if state_file.exists():
+                browser = p.chromium.launch(
+                    headless=headless,
+                    args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
+                )
+                context = browser.new_context(
+                    storage_state=str(state_file),
+                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+                )
+                page = context.new_page()
+            else:
+                browser = p.chromium.launch_persistent_context(
+                    user_data_dir=str(self.user_data_dir),
+                    headless=headless,
+                    args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
+                )
+                page = browser.new_page()
             try:
                 print(f"[Naukri Engine] Navigating to search: {search_url}")
                 page.goto(search_url, timeout=35000)
@@ -113,13 +126,26 @@ class NaukriApplyEngine(BaseJobEngine):
         is_ci = os.getenv("CI", "false").lower() == "true" or os.getenv("HEADLESS", "false").lower() == "true" or not os.getenv("DISPLAY")
         headless = True if is_ci else settings.config_data.get("general", {}).get("headless_browser", False)
 
+        state_file = DATA_DIR / "browser_sessions" / "naukri_state.json"
+
         with sync_playwright() as p:
-            browser = p.chromium.launch_persistent_context(
-                user_data_dir=str(self.user_data_dir),
-                headless=headless,
-                args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
-            )
-            page = browser.new_page()
+            if state_file.exists():
+                browser = p.chromium.launch(
+                    headless=headless,
+                    args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
+                )
+                context = browser.new_context(
+                    storage_state=str(state_file),
+                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+                )
+                page = context.new_page()
+            else:
+                browser = p.chromium.launch_persistent_context(
+                    user_data_dir=str(self.user_data_dir),
+                    headless=headless,
+                    args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
+                )
+                page = browser.new_page()
             try:
                 page.goto(job.job_url, timeout=35000)
                 page.wait_for_timeout(3000)

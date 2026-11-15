@@ -51,6 +51,8 @@ jobs:
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
       GITHUB_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
       GITHUB_USERNAME: "talpadeavi03"
+      LINKEDIN_STORAGE_STATE: ${{ secrets.LINKEDIN_STORAGE_STATE }}
+      NAUKRI_STORAGE_STATE: ${{ secrets.NAUKRI_STORAGE_STATE }}
 
     steps:
       - name: Checkout Repository
@@ -58,6 +60,18 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
+
+      - name: Restore Authenticated Browser Sessions
+        run: |
+          mkdir -p data/browser_sessions
+          if [ -n "$LINKEDIN_STORAGE_STATE" ]; then
+            echo "$LINKEDIN_STORAGE_STATE" > data/browser_sessions/linkedin_state.json
+            echo "✓ Restored authenticated LinkedIn session from secrets."
+          fi
+          if [ -n "$NAUKRI_STORAGE_STATE" ]; then
+            echo "$NAUKRI_STORAGE_STATE" > data/browser_sessions/naukri_state.json
+            echo "✓ Restored authenticated Naukri session from secrets."
+          fi
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
