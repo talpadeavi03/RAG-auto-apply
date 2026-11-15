@@ -138,7 +138,7 @@ def apply(
     vector_store, user_prof, generator, tracker, agy_bridge, external_handler, form_submitter = get_context()
 
     # 1. Public ATS Autonomous Engine (Greenhouse, Lever, Ashby - 100% Cloud Native)
-    if platform in ["ats", "all", "both", "linkedin"]:
+    if platform in ["ats", "all", "both"]:
         console.print("\n[bold green]>>> Processing Public ATS Applications (Greenhouse, Lever, Ashby)...[/bold green]")
         ats_engine = ATSEngine(user_prof, vector_store, generator, tracker, form_submitter)
         with console.status("[bold green]Scanning ATS boards for Cloud roles..."):
@@ -241,6 +241,25 @@ def status():
         table.add_row(st.capitalize(), str(count))
 
     console.print(table)
+
+    applied = tracker.get_applied_jobs()
+    if applied:
+        a_table = Table(title="🎉 Confirmed Applied Jobs (100% Submitted)")
+        a_table.add_column("Company", style="cyan")
+        a_table.add_column("Title", style="white")
+        a_table.add_column("Platform", style="green")
+        a_table.add_column("Applied At", style="yellow")
+        a_table.add_column("Job URL", style="dim")
+
+        for a in applied:
+            a_table.add_row(
+                a.company,
+                a.title,
+                a.platform,
+                a.applied_at.strftime("%Y-%m-%d %H:%M") if a.applied_at else "Today",
+                (a.job_url or "")[:45] + "..."
+            )
+        console.print(a_table)
 
     redirects = tracker.get_redirected_jobs(pending_only=False)
     if redirects:

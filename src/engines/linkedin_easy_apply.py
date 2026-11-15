@@ -138,8 +138,8 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 page.wait_for_timeout(3000)
 
                 # 3. Locate visible Apply Button
-                candidates = page.locator(".top-card-layout__cta-container button, .top-card-layout__cta-container a, button.apply-button, button.jobs-apply-button, button:has-text('Apply'), a:has-text('Apply')").all()
-                visible_apply = [b for b in candidates if b.is_visible() and "apply" in b.inner_text().lower()]
+                candidates = page.locator("button[aria-label*='Easy Apply'], button:has-text('Easy Apply'), button.jobs-apply-button, button.apply-button, .top-card-layout__cta-container button, .top-card-layout__cta-container a, button:has-text('Apply'), a:has-text('Apply')").all()
+                visible_apply = [b for b in candidates if b.is_visible() and ("apply" in b.inner_text().lower() or "apply" in (b.get_attribute("aria-label") or "").lower())]
 
                 if not visible_apply:
                     print(f"[LinkedIn] No direct apply button visible for {job.title}. Checking external portal links...")
@@ -152,10 +152,11 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
 
                 apply_btn = visible_apply[0]
                 btn_text = apply_btn.inner_text().lower()
+                aria_label = (apply_btn.get_attribute("aria-label") or "").lower()
                 href = apply_btn.get_attribute("href") or ""
                 
                 # Check for External redirect link
-                if "easy apply" not in btn_text and (href.startswith("http") or "external" in btn_text):
+                if "easy apply" not in btn_text and "easy apply" not in aria_label and (href.startswith("http") or "external" in btn_text):
                     print(f"[LinkedIn] External portal redirect detected: '{btn_text}' -> {href or 'popup'}")
                     if href.startswith("http") and "linkedin.com" not in href:
                         job.external_url = href
@@ -172,7 +173,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                     return self.external_handler.handle_redirect(job, page=page, interactive=False)
 
                 # Click Apply button
-                print(f"[LinkedIn] Clicking apply button for {job.title}...")
+                print(f"[LinkedIn] Clicking Easy Apply button for {job.title}...")
                 popup_url = None
                 try:
                     with page.expect_popup(timeout=2500) as popup_info:
@@ -181,7 +182,6 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                     popup_url = popup.url
                     popup.close()
                 except Exception:
-                    # No popup window opened; clicked in-page
                     pass
 
                 if popup_url and "linkedin.com" not in popup_url:
@@ -190,29 +190,60 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                     job.apply_type = ApplyType.EXTERNAL_REDIRECT
                     return self.external_handler.handle_redirect(job, page=page, interactive=False)
 
-                page.wait_for_timeout(2000)
+                page.wait_for_timeout(3000)
 
-                # Check if Easy Apply modal appeared
-                modal = page.locator("div.jobs-easy-apply-modal, div[role='dialog']").first
-                if not modal.is_visible():
-                    print(f"[LinkedIn] Easy Apply modal did not appear (guest session or sign-in required).")
-                    print(f"Preparing application dossier for Antigravity CLI assist...")
+                # Check if multi-step form appeared
+                dialog = page.locator("dialog").first
+                try:
+                    dialog.wait_for(state="visible", timeout=6000)
+                except Exception:
+                    pass
+                if not dialog.is_visible():
+                    dialog = page.locator("div[role='dialog'], [aria-modal='true'], .jobs-easy-apply-modal").first
+                container = dialog if dialog.is_visible() else page
+
+                form_active = (
+                    container.locator("button:has-text('Next'), button:has-text('Review'), button:has-text('Submit application'), button[aria-label*='Submit application']").count() > 0
+                    or len([inp for inp in container.locator("input, select, textarea").all() if inp.is_visible()]) >= 2
+                )
+
+                if not form_active:
+                    print(f"[LinkedIn] Easy Apply modal did not appear. Preparing application dossier for Antigravity assist...")
                     job.apply_type = ApplyType.EXTERNAL_REDIRECT
                     return self.external_handler.handle_redirect(job, page=page, interactive=False)
 
                 # Iterate through multi-step dialog
-                max_steps = 10
+                max_steps = 14
                 for step in range(max_steps):
-                    # Answer inputs on current step
-                    self._answer_form_inputs(page, job.title)
+                    print(f"  [LinkedIn Easy Apply] Processing application step {step + 1}...")
+                    dialog = page.locator("dialog").first
+                    container = dialog if dialog.is_visible() else page
 
-                    # Check for Submit button
-                    submit_btn = page.locator("button[aria-label*='Submit application']").or_(
-                        page.locator("button:has-text('Submit application')")
-                    ).first
+                    # Check for Submit button FIRST (Review page / final step)
+                    submit_btn = container.locator("button:has-text('Submit application'), button[aria-label*='Submit application']").first
+                    if not submit_btn.is_visible():
+                        submit_btn = page.locator("button:has-text('Submit application'), button[aria-label*='Submit application']").first
+
+                    if not submit_btn.is_visible():
+                        try:
+                            container.evaluate("e => e.scrollTo(0, e.scrollHeight)")
+                            page.wait_for_timeout(500)
+                        except Exception:
+                            pass
+                        submit_btn = container.locator("button:has-text('Submit application'), button[aria-label*='Submit application']").first
+
                     if submit_btn.is_visible():
+                        print(f"  [LinkedIn] Final Submit button detected! Submitting application for {job.title} at {job.company}...")
+                        submit_btn.scroll_into_view_if_needed()
                         submit_btn.click(force=True)
-                        page.wait_for_timeout(3000)
+                        page.wait_for_timeout(4000)
+                        
+                        # Dismiss confirmation modal if present
+                        dismiss_btn = page.locator("button:has-text('Done'), button[aria-label*='Dismiss'], button:has-text('Dismiss')").first
+                        if dismiss_btn.is_visible():
+                            dismiss_btn.click(force=True)
+                            page.wait_for_timeout(1000)
+
                         print(f"🎉 [LinkedIn] Successfully submitted Easy Apply for {job.title} at {job.company}!")
                         
                         record = ApplicationRecord(
@@ -224,7 +255,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                             apply_type="easy_apply",
                             status=ApplicationStatus.APPLIED,
                             match_score=job.match_score,
-                            notes="Applied via automated Easy Apply with RAG answers."
+                            notes="Applied via automated Easy Apply with RAG answers and resume AT_26_AI.pdf."
                         )
                         self.tracker.record_job(record)
                         notifier.notify_job_applied(
@@ -237,18 +268,40 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         )
                         return True
 
-                    # Check for Next / Review button
-                    next_btn = page.locator("button[aria-label*='Continue to next step']").or_(
-                        page.locator("button:has-text('Next')")
-                    ).or_(page.locator("button:has-text('Review')")).first
-
-                    if next_btn.is_visible():
-                        next_btn.click(force=True)
+                    # Check if Save button is visible (work experience / education open in edit state)
+                    save_btn = container.locator("button:has-text('Save')").first
+                    if save_btn.is_visible():
+                        print("  [LinkedIn] Detected open section with Save button. Selecting options and saving...")
+                        for sel in container.locator("select").all():
+                            try:
+                                if sel.is_visible():
+                                    for opt in sel.locator("option:not([disabled])").all():
+                                        val = opt.get_attribute("value")
+                                        if val and val.lower() not in ["", "none", "select"]:
+                                            sel.select_option(value=val)
+                                            break
+                            except Exception:
+                                pass
+                        page.wait_for_timeout(500)
+                        save_btn.click(force=True)
                         page.wait_for_timeout(1500)
+
+                    # Answer inputs on current step
+                    self._answer_form_inputs(container, job.title)
+                    page.wait_for_timeout(1000)
+
+                    # Check for Next / Review button
+                    next_btn = container.locator("button:has-text('Review'), button[aria-label*='Review'], button:has-text('Next'), button[aria-label*='Continue to next step']").first
+                    if next_btn.is_visible():
+                        btn_label = next_btn.inner_text().strip()
+                        print(f"  [LinkedIn] Advancing with '{btn_label}' button...")
+                        next_btn.scroll_into_view_if_needed()
+                        next_btn.click(force=True)
+                        page.wait_for_timeout(2500)
                     else:
                         break
 
-                print(f"[LinkedIn] Completed form steps for {job.title}.")
+                print(f"[LinkedIn] Finished form steps for {job.title}.")
                 return True
             except Exception as e:
                 print(f"[LinkedIn Apply Error] {e}")
@@ -273,45 +326,187 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
         except Exception as e:
             print(f"[LinkedIn Auth Note] {e}")
 
-    def _answer_form_inputs(self, page: Page, job_title: str):
-        """Fills text inputs, selects, and radios using RAG generator."""
-        # Fill standard text inputs
-        inputs = page.locator("div.jobs-easy-apply-modal input[type='text'], div.jobs-easy-apply-modal input[type='number']").all()
+    def _answer_form_inputs(self, container, job_title: str):
+        """Fills text inputs, selects, radios, and attaches resume using RAG generator."""
+        resume_pdf = DATA_DIR / "resumes" / "AT_26_AI.pdf"
+        if not resume_pdf.exists():
+            resume_pdf = Path("data/resumes/AT_26_AI.pdf")
+
+        # 1. Attach AT_26_AI.pdf if file input present
+        try:
+            file_inps = container.locator("input[type='file']").all()
+            for finp in file_inps:
+                if resume_pdf.exists():
+                    finp.set_input_files(str(resume_pdf.resolve()))
+                    print(f"  [LinkedIn] Attached {resume_pdf.name}")
+                    break
+        except Exception:
+            pass
+
+        # 2. Select first resume radio card if visible and not selected
+        try:
+            resume_radios = container.locator("input[type='radio']").all()
+            for rr in resume_radios:
+                r_id = (rr.get_attribute("id") or "").lower()
+                r_val = (rr.get_attribute("value") or "").lower()
+                if rr.is_visible() and ("resume" in r_id or "cv" in r_id or "at_26" in r_id or "resume" in r_val):
+                    if not rr.is_checked():
+                        rr.check(force=True)
+                    break
+        except Exception:
+            pass
+
+        # 3. Fill text & number inputs
+        inputs = container.locator("input[type='text'], input[type='number'], input[type='tel'], input:not([type]), textarea").all()
         for inp in inputs:
             try:
                 if not inp.is_visible():
                     continue
                 val = inp.input_value()
-                if not val:
-                    # Find label
-                    input_id = inp.get_attribute("id") or ""
-                    label = page.locator(f"label[for='{input_id}']").first
-                    label_text = label.inner_text() if label.is_visible() else "Question"
-                    answer = self.generator.answer_screening_question(label_text, job_title)
-                    inp.fill(answer)
+                if val and val.strip():
+                    continue
+
+                # Skip optional typeahead inputs that break auto-advance
+                is_typeahead = inp.get_attribute("data-testid") == "typeahead-input" or "typeahead" in (inp.get_attribute("class") or "").lower()
+                is_required = inp.get_attribute("required") is not None or inp.get_attribute("aria-required") == "true"
+                if is_typeahead and not is_required:
+                    continue
+
+                input_id = inp.get_attribute("id") or ""
+                input_name = (inp.get_attribute("name") or "").lower()
+                aria_label = (inp.get_attribute("aria-label") or "").lower()
+                placeholder = (inp.get_attribute("placeholder") or "").lower()
+                
+                # Fetch surrounding label / question text from DOM
+                lbl_text = inp.evaluate("e => e.closest('div.k4dlcw, fieldset, div.k4dl5v, form')?.innerText || ''").lower()
+
+                combined = f"{aria_label} {placeholder} {input_name} {lbl_text}".lower()
+
+                if any(w in combined for w in ["phone", "mobile", "tel", "contact"]):
+                    inp.fill("+91 8999285015")
+                elif any(w in combined for w in ["email"]):
+                    inp.fill("talpadeavi0303@gmail.com")
+                elif any(w in combined for w in ["financial", "gross", "salary", "compensation", "ctc", "expectation"]):
+                    inp.fill("85000")
+                elif any(w in combined for w in ["location", "city", "country"]):
+                    inp.fill("India, Pune")
+                elif any(w in combined for w in ["notice", "days"]):
+                    inp.fill("15")
+                elif any(w in combined for w in ["experience", "years", "total"]):
+                    inp.fill("3.5")
+                elif inp.get_attribute("type") == "number":
+                    inp.fill("3")
+                else:
+                    question = aria_label or lbl_text.split("\n")[0] or placeholder or "Question"
+                    answer = self.generator.answer_screening_question(question, job_title)
+                    inp.fill(answer[:150])
             except Exception:
                 continue
 
-        # Fill dropdown selects
-        selects = page.locator("div.jobs-easy-apply-modal select").all()
+        # 4. Fill dropdown selects
+        selects = container.locator("select").all()
         for sel in selects:
             try:
                 if not sel.is_visible():
                     continue
-                # Select Yes or first positive option
-                options = sel.locator("option").all_inner_texts()
-                for opt in options:
-                    if opt.lower() in ["yes", "authorized", "1", "2", "3"]:
-                        sel.select_option(label=opt)
+                cur_val = sel.input_value()
+                if cur_val and cur_val.lower() not in ["", "none", "select", "select an option"]:
+                    continue
+
+                sel_label = sel.evaluate("e => e.closest('div.k4dlcw, fieldset, div.k4dl5v, form')?.innerText || ''").lower()
+
+                enabled_opts = sel.locator("option:not([disabled])").all()
+                chosen_val = None
+                first_valid_val = None
+                for o in enabled_opts:
+                    val = o.get_attribute("value")
+                    txt = o.inner_text().strip().lower()
+                    if not val or txt in ["select", "choose", "none", "select an option"]:
+                        continue
+                    if not first_valid_val:
+                        first_valid_val = val
+
+                    if any(w in sel_label for w in ["notice", "availability"]):
+                        if any(k in txt for k in ["0-15", "immediate", "15"]):
+                            chosen_val = val
+                            break
+                    elif any(w in sel_label for w in ["learn about", "source", "where"]):
+                        if "linkedin" in txt:
+                            chosen_val = val
+                            break
+                    elif any(w in sel_label for w in ["terraform", "iac", "cloud", "aws", "azure"]):
+                        if any(k in txt for k in ["3–5", "1–3", "3", "5", "yes"]):
+                            chosen_val = val
+                            break
+                    elif any(w in sel_label for w in ["python", "rate", "scripting"]):
+                        if any(k in txt for k in ["4", "advanced", "expert", "3"]):
+                            chosen_val = val
+                            break
+                    elif any(w in sel_label for w in ["sponsorship", "require visa"]):
+                        if "no" in txt:
+                            chosen_val = val
+                            break
+                    elif any(w in sel_label for w in ["authorized", "legally", "eligible"]):
+                        if "yes" in txt:
+                            chosen_val = val
+                            break
+                    elif any(k in txt for k in ["yes", "authorized", "india", "pune", "immediate", "15 days", "3", "4", "2022", "january", "may"]):
+                        chosen_val = val
                         break
+
+                if not chosen_val:
+                    chosen_val = first_valid_val
+
+                if chosen_val:
+                    sel.select_option(value=chosen_val)
             except Exception:
                 continue
 
-        # Radios
-        radios = page.locator("div.jobs-easy-apply-modal input[type='radio'][value='Yes']").all()
+        # 5. Radio groups
+        radios = container.locator("input[type='radio']").all()
+        processed_names = set()
         for r in radios:
             try:
-                if r.is_visible() and not r.is_checked():
-                    r.check()
+                if not r.is_visible():
+                    continue
+                name = r.get_attribute("name")
+                if not name or name in processed_names:
+                    continue
+                processed_names.add(name)
+
+                group_radios = container.locator(f"input[type='radio'][name='{name}']").all()
+                if any(gr.is_checked() for gr in group_radios):
+                    continue
+
+                label = r.evaluate("e => e.closest('fieldset')?.querySelector('legend')?.innerText || e.closest('.form-group, div')?.innerText || ''").lower()
+                if any(w in label for w in ["sponsorship", "require visa", "criminal", "convicted"]):
+                    target = next((gr for gr in group_radios if gr.get_attribute("value") and "no" in gr.get_attribute("value").lower()), None)
+                else:
+                    target = next((gr for gr in group_radios if gr.get_attribute("value") and "yes" in gr.get_attribute("value").lower()), None)
+
+                if not target and group_radios:
+                    target = group_radios[0]
+
+                if target:
+                    target.check(force=True)
+            except Exception:
+                continue
+
+        # 6. Checkboxes (terms / consent / skills)
+        checkboxes = container.locator("input[type='checkbox']").all()
+        for cb in checkboxes:
+            try:
+                cb.scroll_into_view_if_needed()
+                cb_label = cb.evaluate("""e => {
+                    const l = e.closest("label") || document.querySelector(`label[for="${e.id}"]`) || e.closest("div")?.querySelector("p, label, span");
+                    return l ? l.innerText.trim() : "";
+                }""").lower()
+
+                if "none of the above" in cb_label:
+                    if cb.is_checked():
+                        cb.evaluate("e => { if (e.checked) e.click(); }")
+                else:
+                    if not cb.is_checked():
+                        cb.evaluate("e => { if (!e.checked) e.click(); }")
             except Exception:
                 continue

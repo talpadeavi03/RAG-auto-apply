@@ -51,20 +51,58 @@ class ATSEngine(BaseJobEngine):
         matched_jobs: List[JobPost] = []
         target_kws = [kw.lower() for kw in keywords] if keywords else ["cloud", "devops", "infrastructure", "platform", "sre"]
 
-        # 1. Scan Greenhouse boards
+        # 1. Scan Lever boards first (direct, clean, streamlined application forms)
+        for comp_name, slug in self.lever_boards:
+            try:
+                r = requests.get(f"https://api.lever.co/v0/postings/{slug}?mode=json", timeout=4)
+                if r.status_code == 200:
+                    data = r.json()
+                    comp_count = 0
+                    for j in data:
+                        title = j.get("text", "")
+                        title_lower = title.lower()
+                        loc_name = j.get("categories", {}).get("location", "Remote / India")
+
+                        if any(kw in title_lower for kw in target_kws):
+                            apply_url = j.get("applyUrl") or (j.get("hostedUrl", "") + "/apply")
+                            if not apply_url:
+                                continue
+
+                            score, skills, _ = self.vector_store.match_job(title, f"{title} at {comp_name}", self.profile.skills)
+                            job_id = f"lever_{slug}_{j.get('id')}"
+
+                            job_post = JobPost(
+                                platform=Platform.EXTERNAL,
+                                job_id=job_id,
+                                title=title,
+                                company=comp_name,
+                                location=loc_name,
+                                job_url=apply_url,
+                                description=f"{title} position at {comp_name}",
+                                apply_type=ApplyType.DIRECT,
+                                match_score=score,
+                                skills_matched=skills
+                            )
+                            matched_jobs.append(job_post)
+                            print(f"  [ATS Match: Lever] {title} @ {comp_name} ({loc_name}) - Score: {int(score*100)}%")
+                            comp_count += 1
+                            if comp_count >= 2:
+                                break
+            except Exception:
+                continue
+
+        # 2. Scan Greenhouse boards
         for comp_name, board in self.greenhouse_boards:
-            if len(matched_jobs) >= limit:
-                break
             try:
                 r = requests.get(f"https://boards-api.greenhouse.io/v1/boards/{board}/jobs", timeout=4)
                 if r.status_code == 200:
                     data = r.json().get("jobs", [])
+                    comp_count = 0
                     for j in data:
                         title = j.get("title", "")
                         title_lower = title.lower()
                         loc_name = j.get("location", {}).get("name", "Remote / India")
                         
-                        # Check keyword match
                         if any(kw in title_lower for kw in target_kws):
                             job_url = j.get("absolute_url")
                             if not job_url:
@@ -87,53 +125,17 @@ class ATSEngine(BaseJobEngine):
                             )
                             matched_jobs.append(job_post)
                             print(f"  [ATS Match: Greenhouse] {title} @ {comp_name} ({loc_name}) - Score: {int(score*100)}%")
-                            if len(matched_jobs) >= limit:
+                            comp_count += 1
+                            if comp_count >= 2:
                                 break
             except Exception:
                 continue
 
-        # 2. Scan Lever boards
-        for comp_name, slug in self.lever_boards:
-            if len(matched_jobs) >= limit:
-                break
-            try:
-                r = requests.get(f"https://api.lever.co/v0/postings/{slug}?mode=json", timeout=4)
-                if r.status_code == 200:
-                    data = r.json()
-                    for j in data:
-                        title = j.get("text", "")
-                        title_lower = title.lower()
-                        loc_name = j.get("categories", {}).get("location", "Remote / India")
-
-                        if any(kw in title_lower for kw in target_kws):
-                            apply_url = j.get("applyUrl") or j.get("hostedUrl")
-                            if not apply_url:
-                                continue
-
-                            score, skills, _ = self.vector_store.match_job(title, f"{title} at {comp_name}", self.profile.skills)
-                            job_id = f"lever_{slug}_{j.get('id')}"
-
-                            job_post = JobPost(
-                                platform=Platform.EXTERNAL,
-                                job_id=job_id,
-                                title=title,
-                                company=comp_name,
-                                location=loc_name,
-                                job_url=apply_url,
-                                description=f"{title} position at {comp_name}",
-                                apply_type=ApplyType.DIRECT,
-                                match_score=score,
-                                skills_matched=skills
-                            )
-                            matched_jobs.append(job_post)
-                            print(f"  [ATS Match: Lever] {title} @ {comp_name} ({loc_name}) - Score: {int(score*100)}%")
-                            if len(matched_jobs) >= limit:
-                                break
-            except Exception:
-                continue
-
-        print(f"[ATS Engine] Total candidate roles matched: {len(matched_jobs)}")
-        return matched_jobs
+        # Sort by match score descending
+        matched_jobs.sort(key=lambda x: x.match_score, reverse=True)
+        top_jobs = matched_jobs[:limit]
+        print(f"[ATS Engine] Total candidate roles matched: {len(top_jobs)}")
+        return top_jobs
 
     def apply_to_job(self, job: JobPost) -> bool:
         """Autonomously fills and submits application to public ATS portal."""

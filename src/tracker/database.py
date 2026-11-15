@@ -46,6 +46,12 @@ class ApplicationTracker:
     def record_job(self, record: ApplicationRecord):
         with self._get_connection() as conn:
             cursor = conn.cursor()
+            applied_timestamp = None
+            if record.status in [ApplicationStatus.APPLIED, "applied"]:
+                applied_timestamp = (record.applied_at or datetime.now()).isoformat()
+            elif record.applied_at:
+                applied_timestamp = record.applied_at.isoformat()
+
             cursor.execute("""
             INSERT INTO applications (job_id, platform, company, title, job_url, apply_type, external_url, status, match_score, notes, applied_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -65,9 +71,55 @@ class ApplicationTracker:
                 record.status.value,
                 record.match_score,
                 record.notes,
-                record.applied_at.isoformat() if record.applied_at else None
+                applied_timestamp
             ))
             conn.commit()
+
+    def get_applied_jobs(self) -> List[ApplicationRecord]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, job_id, platform, company, title, job_url, apply_type, external_url, status, match_score, notes, applied_at FROM applications WHERE status = 'applied' ORDER BY applied_at DESC")
+            rows = cursor.fetchall()
+            return [
+                ApplicationRecord(
+                    id=r[0],
+                    job_id=r[1],
+                    platform=r[2],
+                    company=r[3],
+                    title=r[4],
+                    job_url=r[5],
+                    apply_type=r[6],
+                    external_url=r[7],
+                    status=ApplicationStatus(r[8]),
+                    match_score=r[9] or 0.0,
+                    notes=r[10],
+                    applied_at=datetime.fromisoformat(r[11]) if r[11] else None
+                )
+                for r in rows
+            ]
+
+    def get_all_jobs(self) -> List[ApplicationRecord]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, job_id, platform, company, title, job_url, apply_type, external_url, status, match_score, notes, applied_at FROM applications ORDER BY id DESC")
+            rows = cursor.fetchall()
+            return [
+                ApplicationRecord(
+                    id=r[0],
+                    job_id=r[1],
+                    platform=r[2],
+                    company=r[3],
+                    title=r[4],
+                    job_url=r[5],
+                    apply_type=r[6],
+                    external_url=r[7],
+                    status=ApplicationStatus(r[8]),
+                    match_score=r[9] or 0.0,
+                    notes=r[10],
+                    applied_at=datetime.fromisoformat(r[11]) if r[11] else None
+                )
+                for r in rows
+            ]
 
     def get_redirected_jobs(self, pending_only: bool = True) -> List[ApplicationRecord]:
         with self._get_connection() as conn:
