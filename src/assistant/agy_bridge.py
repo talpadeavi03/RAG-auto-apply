@@ -16,7 +16,16 @@ class AntigravityCLIBridge:
     (e.g. Workday, Greenhouse, Lever, Taleo, Ashby, company career sites).
     """
     def __init__(self, agy_path: Optional[str] = None):
-        self.agy_path = agy_path or settings.config_data.get("agy_assistant", {}).get("binary_path") or shutil.which("agy") or str(Path.home() / ".local/bin/agy")
+        which_agy = shutil.which("agy")
+        configured_path = settings.config_data.get("agy_assistant", {}).get("binary_path")
+        if configured_path and Path(configured_path).exists():
+            default_path = configured_path
+        elif which_agy:
+            default_path = which_agy
+        else:
+            default_path = str(Path.home() / ".local/bin/agy")
+
+        self.agy_path = agy_path or default_path
 
     def is_available(self) -> bool:
         return Path(self.agy_path).exists() and os.access(self.agy_path, os.X_OK)
