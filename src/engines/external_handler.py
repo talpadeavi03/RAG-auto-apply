@@ -1,6 +1,7 @@
 from src.models import JobPost, CandidateProfile, ApplicationRecord, ApplicationStatus
 from src.tracker.database import ApplicationTracker
 from src.assistant.agy_bridge import AntigravityCLIBridge
+from src.notifier.discord import notifier
 
 class ExternalRedirectHandler:
     """
@@ -45,6 +46,15 @@ class ExternalRedirectHandler:
             profile=self.profile,
             rag_context=rag_context,
             interactive=interactive
+        )
+
+        notifier.notify_external_redirect(
+            title=job.title,
+            company=job.company,
+            platform=job.platform.value,
+            external_url=job.external_url or job.job_url,
+            match_score=job.match_score,
+            dossier_path=f"data/applications/{job.company}_{job.job_id}/application_dossier.md"
         )
 
         if success:

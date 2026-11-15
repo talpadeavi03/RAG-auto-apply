@@ -19,6 +19,7 @@ from src.profile_updater.naukri_updater import NaukriProfileUpdater
 from src.engines.external_handler import ExternalRedirectHandler
 from src.engines.linkedin_easy_apply import LinkedInEasyApplyEngine
 from src.engines.naukri_apply import NaukriApplyEngine
+from src.notifier.discord import notifier
 
 app = typer.Typer(help="RAG-AG-Apply: Intelligent Job Application & Profile Management with Antigravity CLI Assistance")
 console = Console()
@@ -168,6 +169,16 @@ def apply(
                 li_engine.apply_to_job(job)
             else:
                 console.print(f"Skipping [dim]{job.title} at {job.company} (Match: {int(job.match_score*100)}%)[/dim]")
+
+    # Send Cycle Summary Alert to Discord
+    stats = tracker.get_summary_stats()
+    redirects = tracker.get_redirected_jobs(pending_only=False)
+    notifier.notify_cycle_summary(
+        total_processed=stats.get("total", 0),
+        applied_count=stats.get("breakdown", {}).get("applied", 0),
+        redirect_count=len(redirects),
+        platform=platform.capitalize()
+    )
 
 @app.command()
 def assist(

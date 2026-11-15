@@ -4,6 +4,7 @@ from typing import Optional
 from playwright.sync_api import sync_playwright, BrowserContext
 from src.models import ProfileUpdatePayload
 from src.config import settings, DATA_DIR
+from src.notifier.discord import notifier
 
 class LinkedInProfileUpdater:
     def __init__(self, email: Optional[str] = None, password: Optional[str] = None):
@@ -75,6 +76,7 @@ class LinkedInProfileUpdater:
                         save_btn.click()
                         page.wait_for_timeout(3000)
                         print("[LinkedIn] Intro changes saved successfully.")
+                        notifier.notify_profile_updated("LinkedIn", payload.headline, payload.summary)
 
                 print("✅ [LinkedIn Profile Updater] Profile update finished!")
                 return True

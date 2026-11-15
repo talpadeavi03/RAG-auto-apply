@@ -4,6 +4,7 @@ from typing import Optional
 from playwright.sync_api import sync_playwright
 from src.models import ProfileUpdatePayload
 from src.config import settings, DATA_DIR
+from src.notifier.discord import notifier
 
 class NaukriProfileUpdater:
     def __init__(self, email: Optional[str] = None, password: Optional[str] = None):
@@ -80,6 +81,7 @@ class NaukriProfileUpdater:
                         page.click("button.btn-dark-ot:has-text('Save')")
                         page.wait_for_timeout(2000)
                         print("[Naukri] Profile Summary updated.")
+                        notifier.notify_profile_updated("Naukri", payload.headline, payload.summary)
 
                 print("✅ [Naukri Profile Updater] Profile updated and refreshed!")
                 return True

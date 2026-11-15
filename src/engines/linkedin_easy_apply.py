@@ -6,6 +6,7 @@ from src.engines.base import BaseJobEngine
 from src.models import JobPost, Platform, ApplyType, ApplicationRecord, ApplicationStatus
 from src.engines.external_handler import ExternalRedirectHandler
 from src.config import settings, DATA_DIR
+from src.notifier.discord import notifier
 
 class LinkedInEasyApplyEngine(BaseJobEngine):
     def __init__(self, profile, vector_store, generator, tracker, external_handler: ExternalRedirectHandler):
@@ -174,6 +175,14 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                             notes="Applied via automated Easy Apply with RAG answers."
                         )
                         self.tracker.record_job(record)
+                        notifier.notify_job_applied(
+                            title=job.title,
+                            company=job.company,
+                            platform="LinkedIn Easy Apply",
+                            match_score=job.match_score,
+                            job_url=job.job_url,
+                            location=job.location
+                        )
                         return True
 
                     # Check for Next / Review button

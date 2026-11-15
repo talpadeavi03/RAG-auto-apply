@@ -177,10 +177,21 @@ The entire pipeline runs autonomously via GitHub Actions.
      - Displays the complete dossier in the GitHub Step Summary.
 
 ### Repository Secrets Configuration
-To enable browser login on GitHub Actions, add these repository secrets in **Settings > Secrets and variables > Actions**:
+To enable automated applications and Discord alerts on GitHub Actions, add these repository secrets in **Settings > Secrets and variables > Actions**:
 - `LINKEDIN_EMAIL` & `LINKEDIN_PASSWORD`
 - `NAUKRI_EMAIL` & `NAUKRI_PASSWORD`
-- `GITHUB_TOKEN` (automatically provided by GitHub Actions)
+- `GH_PAT` (Personal Access Token for authenticated git commits & API requests)
+- `DISCORD_WEBHOOK_URL` (Discord channel webhook URL for real-time embeds)
+
+---
+
+## 📢 Discord Alerts
+
+The system sends real-time colored embeds directly to your Discord channel:
+- 🔄 **Profile Updates:** When LinkedIn/Naukri profiles are refreshed with latest GitHub project links.
+- 🎉 **Applied Jobs:** Real-time alert when a job is successfully applied (Job title, company, platform, match score, link).
+- 🔗 **External Redirects:** When a job redirects externally, an alert is sent with the direct portal link and Antigravity CLI dossier.
+- 📊 **Cycle Summary:** Metrics summary after each 4-hour cycle.
 
 ---
 

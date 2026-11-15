@@ -48,6 +48,7 @@ jobs:
       LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
       NAUKRI_EMAIL: ${{ secrets.NAUKRI_EMAIL }}
       NAUKRI_PASSWORD: ${{ secrets.NAUKRI_PASSWORD }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
       GITHUB_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
       GITHUB_USERNAME: "talpadeavi03"
 
