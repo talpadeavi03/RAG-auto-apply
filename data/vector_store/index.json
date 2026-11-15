@@ -76,11 +76,11 @@
     {
       "doc_id": "github_repo_RAG-auto-apply",
       "source_type": "github_repo",
-      "title": "GitHub Repo: RAG-auto-apply ()",
-      "content": "Project Name: RAG-auto-apply\nLanguage: \nStars: 0\nDescription: \nURL: https://github.com/talpadeavi03/RAG-auto-apply",
+      "title": "GitHub Repo: RAG-auto-apply (Python)",
+      "content": "Project Name: RAG-auto-apply\nLanguage: Python\nStars: 0\nDescription: \nREADME Highlights:\n# RAG-AG-Apply\n**RAG & GitHub-Powered Autonomous Job Application & Profile Management Pipeline**\n*Tailored for LinkedIn, Naukri, and External Career Portals with Antigravity CLI (`agy`) Assistance.*\n---\n## \ud83d\ude80 Overview\n`RAG-AG-Apply` is an intelligent, agent-assisted automation framework designed to streamline the tech job search and profile presence across **LinkedIn** and **Naukri**:\n1. **RAG Knowledge Base & GitHub Mining**: Ingests your master resume and public GitHub repositories (including READMEs, architectures, starred projects, and technical skills) into a local vector retrieval index.\n2. **Auto Profile Updating**:\n- **LinkedIn**: Generates and updates ATS-optimized headlines, About/Summary sections featuring live GitHub projects, and core skill endorsements.\n- **Naukri**: Formulates an ATS-tailored Resume Headline (strict 250 character compliance) and Profile Summary. Refreshes the profile timestamp daily to maximize recruiter search ranking.\n3. **Automated Applications**:\n- **Naukri**: Searches target roles, evaluates RAG match scores, answers screening questions, and performs direct 1-click apply.\n- **LinkedIn**: Searches roles with Easy Apply filters, calculates skill fit via RAG, automatically navigates multi-step modals, answers recruiter screening questions, and submits applications.\n4. **External Link Redirection & Antigravity CLI (`agy`) Assist**:\n- When a job redirects to an external career portal (e.g. Workday, Greenhouse, Lever, Taleo, Ashby, SmartRecruiter\nURL: https://github.com/talpadeavi03/RAG-auto-apply",
       "metadata": {
         "name": "RAG-auto-apply",
-        "language": "",
+        "language": "Python",
         "stars": 0,
         "url": "https://github.com/talpadeavi03/RAG-auto-apply"
       }
