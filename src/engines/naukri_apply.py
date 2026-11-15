@@ -20,8 +20,9 @@ class NaukriApplyEngine(BaseJobEngine):
     def search_jobs(self, keywords: List[str], locations: List[str], limit: int = 15) -> List[JobPost]:
         """Search jobs on Naukri with keywords."""
         jobs: List[JobPost] = []
-        kw_slug = "-".join([k.lower().replace(" ", "-") for k in keywords[:2]])
-        loc_slug = locations[0].lower().replace(" ", "-") if locations else "india"
+        target_kw = keywords[0] if keywords else "Cloud Engineer"
+        kw_slug = target_kw.lower().replace(" ", "-")
+        loc_slug = locations[0].lower().replace(" ", "-") if locations else "pune"
         search_url = f"https://www.naukri.com/{kw_slug}-jobs-in-{loc_slug}"
 
         self.user_data_dir.mkdir(parents=True, exist_ok=True)
@@ -41,7 +42,7 @@ class NaukriApplyEngine(BaseJobEngine):
                 page.wait_for_timeout(4000)
 
                 # Find job articles
-                articles = page.locator("article.jobTuple, div.srp-jobtuple-wrapper").all()
+                articles = page.locator("div.cust-job-tuple, div.srp-jobtuple-wrapper, article.jobTuple, div[data-job-id]").all()
                 print(f"[Naukri Engine] Found {len(articles)} job listings.")
 
                 for idx, art in enumerate(articles[:limit]):

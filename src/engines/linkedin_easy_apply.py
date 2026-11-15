@@ -20,8 +20,9 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
     def search_jobs(self, keywords: List[str], locations: List[str], limit: int = 15) -> List[JobPost]:
         """Search LinkedIn jobs with Easy Apply filter enabled."""
         jobs: List[JobPost] = []
-        kw = urllib.parse.quote(" ".join(keywords[:2]))
-        loc = urllib.parse.quote(locations[0] if locations else "Remote")
+        target_kw = keywords[0] if keywords else "Cloud Engineer"
+        kw = urllib.parse.quote(target_kw)
+        loc = urllib.parse.quote(locations[0] if locations else "Pune")
         # f_LF=f_AL corresponds to Easy Apply filter on LinkedIn
         search_url = f"https://www.linkedin.com/jobs/search/?keywords={kw}&location={loc}&f_AL=true"
         
@@ -41,13 +42,13 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 page.goto(search_url, timeout=35000)
                 page.wait_for_timeout(4000)
 
-                # Locate job cards
-                card_locators = page.locator("li.jobs-search-results__list-item, div.job-card-container").all()
+                # Locate job cards (both logged-in and guest markup)
+                card_locators = page.locator("div.base-card, li.jobs-search-results__list-item, div.job-card-container, div.base-search-card").all()
                 print(f"[LinkedIn Engine] Found {len(card_locators)} job cards on page.")
 
                 for idx, card in enumerate(card_locators[:limit]):
                     try:
-                        title_elem = card.locator("a.job-card-list__title--link, a.job-card-container__link").first
+                        title_elem = card.locator("a.base-card__full-link, a.job-card-list__title--link, a.job-card-container__link, h3.base-search-card__title").first
                         if not title_elem.is_visible():
                             continue
                         title = title_elem.inner_text().strip()
@@ -55,11 +56,11 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         if job_url.startswith("/"):
                             job_url = "https://www.linkedin.com" + job_url
 
-                        company_elem = card.locator(".job-card-container__primary-description").first
+                        company_elem = card.locator("h4.base-search-card__subtitle, a.job-card-container__primary-description, div.job-card-container__primary-description").first
                         company = company_elem.inner_text().strip() if company_elem.is_visible() else "Company"
 
-                        loc_elem = card.locator(".job-card-container__metadata-wrapper li").first
-                        location = loc_elem.inner_text().strip() if loc_elem.is_visible() else "Remote"
+                        loc_elem = card.locator("span.job-search-card__location, .job-card-container__metadata-wrapper li").first
+                        location = loc_elem.inner_text().strip() if loc_elem.is_visible() else "Pune"
 
                         # Extract Job ID
                         job_id = f"li_{idx}_{int(time.time())}"
