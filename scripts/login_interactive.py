@@ -22,6 +22,31 @@ if env_file.exists():
             k, v = line.strip().split("=", 1)
             os.environ.setdefault(k.strip(), v.strip())
 
+def sync_secret_to_github(secret_name: str, value: str):
+    token = os.getenv("GITHUB_TOKEN")
+    if not token:
+        return
+    try:
+        from nacl import encoding, public
+        import base64
+        import requests
+
+        headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
+        repo = "talpadeavi03/RAG-auto-apply"
+        res = requests.get(f"https://api.github.com/repos/{repo}/actions/secrets/public-key", headers=headers, timeout=10)
+        if res.status_code == 200:
+            key_data = res.json()
+            public_key = public.PublicKey(key_data["key"].encode("utf-8"), encoding.Base64Encoder())
+            sealed_box = public.SealedBox(public_key)
+            encrypted = sealed_box.encrypt(value.encode("utf-8"))
+            encrypted_b64 = base64.b64encode(encrypted).decode("utf-8")
+            payload = {"encrypted_value": encrypted_b64, "key_id": key_data["key_id"]}
+            put_res = requests.put(f"https://api.github.com/repos/{repo}/actions/secrets/{secret_name}", headers=headers, json=payload, timeout=10)
+            if put_res.status_code in [201, 204]:
+                print(f"✓ Automatically synchronized encrypted secret '{secret_name}' to GitHub Actions!")
+    except Exception as e:
+        print(f"Secret sync note: {e}")
+
 def login_linkedin():
     SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
     state_file = SESSIONS_DIR / "linkedin_state.json"
@@ -64,10 +89,12 @@ def login_linkedin():
             print("✓ LinkedIn Login successfully detected!")
             context.storage_state(path=str(state_file))
             print(f"✓ Saved authenticated LinkedIn state to: {state_file}")
+            sync_secret_to_github("LINKEDIN_STORAGE_STATE", state_file.read_text())
         except Exception as e:
             print(f"Saving current state (browser may have been closed or timed out): {e}")
             try:
                 context.storage_state(path=str(state_file))
+                sync_secret_to_github("LINKEDIN_STORAGE_STATE", state_file.read_text())
             except Exception:
                 pass
         finally:
@@ -119,10 +146,12 @@ def login_naukri():
             print("✓ Naukri Login successfully detected!")
             context.storage_state(path=str(state_file))
             print(f"✓ Saved authenticated Naukri state to: {state_file}")
+            sync_secret_to_github("NAUKRI_STORAGE_STATE", state_file.read_text())
         except Exception as e:
             print(f"Saving current state (browser may have been closed or timed out): {e}")
             try:
                 context.storage_state(path=str(state_file))
+                sync_secret_to_github("NAUKRI_STORAGE_STATE", state_file.read_text())
             except Exception:
                 pass
         finally:

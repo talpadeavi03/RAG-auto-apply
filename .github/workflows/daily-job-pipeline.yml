@@ -9,9 +9,11 @@ on:
       platform:
         description: 'Target Platform'
         required: true
-        default: 'both'
+        default: 'all'
         type: choice
         options:
+          - all
+          - ats
           - both
           - linkedin
           - naukri

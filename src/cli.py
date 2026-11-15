@@ -18,6 +18,7 @@ from src.profile_updater.linkedin_updater import LinkedInProfileUpdater
 from src.profile_updater.naukri_updater import NaukriProfileUpdater
 from src.engines.external_handler import ExternalRedirectHandler
 from src.engines.form_submitter import AutonomousFormSubmitter
+from src.engines.ats_engine import ATSEngine
 from src.engines.linkedin_easy_apply import LinkedInEasyApplyEngine
 from src.engines.naukri_apply import NaukriApplyEngine
 from src.notifier.discord import notifier
@@ -33,7 +34,7 @@ def get_context():
     agy_bridge = AntigravityCLIBridge()
     form_submitter = AutonomousFormSubmitter(profile, vector_store, generator, tracker)
     external_handler = ExternalRedirectHandler(profile, vector_store, tracker, agy_bridge, form_submitter=form_submitter)
-    return vector_store, profile, generator, tracker, agy_bridge, external_handler
+    return vector_store, profile, generator, tracker, agy_bridge, external_handler, form_submitter
 
 @app.command()
 def ingest(
@@ -91,7 +92,7 @@ def profile(
     Auto-update LinkedIn & Naukri profiles with GitHub projects & ATS optimizations.
     """
     console.print(Panel.fit(f"[bold magenta]Profile Optimizer & Auto-Updater ({platform.upper()})[/bold magenta]", border_style="magenta"))
-    vector_store, user_prof, generator, _, _, _ = get_context()
+    vector_store, user_prof, generator, *_ = get_context()
 
     # Load GitHub repos
     gh_loader = GitHubLoader(user_prof.github_username)
@@ -134,9 +135,24 @@ def apply(
     Directly routes external redirect applications to Antigravity CLI (agy).
     """
     console.print(Panel.fit("[bold green]Autonomous Job Application Pipeline[/bold green]", border_style="green"))
-    vector_store, user_prof, generator, tracker, agy_bridge, external_handler = get_context()
+    vector_store, user_prof, generator, tracker, agy_bridge, external_handler, form_submitter = get_context()
 
-    # 1. Naukri Flow
+    # 1. Public ATS Autonomous Engine (Greenhouse, Lever, Ashby - 100% Cloud Native)
+    if platform in ["ats", "all", "both", "linkedin"]:
+        console.print("\n[bold green]>>> Processing Public ATS Applications (Greenhouse, Lever, Ashby)...[/bold green]")
+        ats_engine = ATSEngine(user_prof, vector_store, generator, tracker, form_submitter)
+        with console.status("[bold green]Scanning ATS boards for Cloud roles..."):
+            ats_jobs = ats_engine.search_jobs(keywords=["cloud", "devops", "infrastructure", "platform", "sre"], locations=["India", "Remote"], limit=limit)
+
+        console.print(f"Found {len(ats_jobs)} ATS candidate jobs. Evaluating & applying...")
+        for job in ats_jobs:
+            if job.match_score >= min_score:
+                console.print(f"Submitting to [bold]{job.title}[/bold] at [cyan]{job.company}[/cyan] (Match: {int(job.match_score*100)}%)")
+                ats_engine.apply_to_job(job)
+            else:
+                console.print(f"Skipping [dim]{job.title} at {job.company} (Match: {int(job.match_score*100)}%)[/dim]")
+
+    # 2. Naukri Flow
     if platform in ["naukri", "both"]:
         console.print("\n[bold blue]>>> Processing Naukri Applications...[/bold blue]")
         naukri_engine = NaukriApplyEngine(user_prof, vector_store, generator, tracker, external_handler)
