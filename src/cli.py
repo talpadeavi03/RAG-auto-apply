@@ -153,7 +153,7 @@ def apply(
                 console.print(f"Skipping [dim]{job.title} at {job.company} (Match: {int(job.match_score*100)}%)[/dim]")
 
     # 2. Naukri Flow
-    if platform in ["naukri", "both"]:
+    if platform in ["naukri", "both", "all"]:
         console.print("\n[bold blue]>>> Processing Naukri Applications...[/bold blue]")
         naukri_engine = NaukriApplyEngine(user_prof, vector_store, generator, tracker, external_handler)
         keywords = settings.config_data.get("naukri", {}).get("keywords", user_prof.skills[:3])
@@ -170,8 +170,8 @@ def apply(
             else:
                 console.print(f"Skipping [dim]{job.title} at {job.company} (Match score {int(job.match_score*100)}% below {int(min_score*100)}%)[/dim]")
 
-    # 2. LinkedIn Easy Apply Flow
-    if platform in ["linkedin", "both"]:
+    # 3. LinkedIn Easy Apply Flow
+    if platform in ["linkedin", "both", "all"]:
         console.print("\n[bold blue]>>> Processing LinkedIn Easy Apply Applications...[/bold blue]")
         li_engine = LinkedInEasyApplyEngine(user_prof, vector_store, generator, tracker, external_handler)
         keywords = settings.config_data.get("linkedin", {}).get("target_titles", user_prof.target_titles or ["Software Engineer"])
