@@ -17,7 +17,7 @@ class ExternalRedirectHandler:
         self.agy_bridge = agy_bridge
         self.form_submitter = form_submitter
 
-    def handle_redirect(self, job: JobPost, interactive: bool = True) -> bool:
+    def handle_redirect(self, job: JobPost, page=None, interactive: bool = True) -> bool:
         target_url = job.external_url or job.job_url
         print(f"\n=======================================================")
         print(f"🔗 [External Portal Detected] {job.company} - {job.title}")
@@ -27,7 +27,7 @@ class ExternalRedirectHandler:
         # 1. Attempt Autonomous Cloud Form Submission first
         if self.form_submitter and target_url and target_url.startswith("http"):
             try:
-                submitted = self.form_submitter.submit_application(job, target_url)
+                submitted = self.form_submitter.submit_application(job, target_url, page=page)
                 if submitted:
                     print(f"✓ [Autonomous Submission] Successfully submitted application for {job.title} at {job.company}!")
                     return True

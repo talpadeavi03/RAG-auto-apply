@@ -145,7 +145,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                     if ext_link.is_visible():
                         job.external_url = ext_link.get_attribute("href")
                         job.apply_type = ApplyType.EXTERNAL_REDIRECT
-                        return self.external_handler.handle_redirect(job, interactive=False)
+                        return self.external_handler.handle_redirect(job, page=page, interactive=False)
                     return False
 
                 apply_btn = visible_apply[0]
@@ -167,7 +167,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         except Exception:
                             job.external_url = job.job_url
                     job.apply_type = ApplyType.EXTERNAL_REDIRECT
-                    return self.external_handler.handle_redirect(job, interactive=False)
+                    return self.external_handler.handle_redirect(job, page=page, interactive=False)
 
                 # Click Apply button
                 print(f"[LinkedIn] Clicking apply button for {job.title}...")
@@ -186,7 +186,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                     print(f"[LinkedIn] External career portal opened: {popup_url}")
                     job.external_url = popup_url
                     job.apply_type = ApplyType.EXTERNAL_REDIRECT
-                    return self.external_handler.handle_redirect(job, interactive=False)
+                    return self.external_handler.handle_redirect(job, page=page, interactive=False)
 
                 page.wait_for_timeout(2000)
 
@@ -196,7 +196,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                     print(f"[LinkedIn] Easy Apply modal did not appear (guest session or sign-in required).")
                     print(f"Preparing application dossier for Antigravity CLI assist...")
                     job.apply_type = ApplyType.EXTERNAL_REDIRECT
-                    return self.external_handler.handle_redirect(job, interactive=False)
+                    return self.external_handler.handle_redirect(job, page=page, interactive=False)
 
                 # Iterate through multi-step dialog
                 max_steps = 10
