@@ -69,19 +69,8 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         elif "currentJobId=" in job_url:
                             job_id = "li_" + job_url.split("currentJobId=")[1].split("&")[0]
 
-                        # Click card to load job details
-                        card.click()
-                        page.wait_for_timeout(1500)
-
-                        desc_elem = page.locator("div.jobs-description__content, div#job-details").first
-                        description = desc_elem.inner_text().strip() if desc_elem.is_visible() else ""
-
-                        # Evaluate Match Score with RAG
-                        score, matched_skills, _ = self.vector_store.match_job(title, description, self.profile.skills)
-
-                        # Check whether Easy Apply button or External Apply button is present
-                        easy_apply_btn = page.locator("button.jobs-apply-button:has-text('Easy Apply')").first
-                        has_easy_apply = easy_apply_btn.is_visible()
+                        # Evaluate Match Score with RAG directly on title and company
+                        score, matched_skills, _ = self.vector_store.match_job(title, f"{title} {company}", self.profile.skills)
 
                         job_post = JobPost(
                             platform=Platform.LINKEDIN,
@@ -90,13 +79,15 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                             company=company,
                             location=location,
                             job_url=job_url,
-                            description=description[:2000],
-                            apply_type=ApplyType.EASY_APPLY if has_easy_apply else ApplyType.EXTERNAL_REDIRECT,
+                            description=f"{title} at {company}",
+                            apply_type=ApplyType.EASY_APPLY,
                             match_score=score,
                             skills_matched=matched_skills
                         )
                         jobs.append(job_post)
+                        print(f"  [LinkedIn Match] {title} @ {company} (Score: {int(score*100)}%)")
                     except Exception as e:
+                        print(f"  [LinkedIn Card Error] {e}")
                         continue
             except Exception as e:
                 print(f"[LinkedIn Search Warning] {e}")
@@ -111,9 +102,9 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
             print(f"[LinkedIn] Job '{job.title}' at {job.company} already applied. Skipping.")
             return False
 
-        if job.apply_type == ApplyType.EXTERNAL_REDIRECT or job.external_url:
+        if job.apply_type == ApplyType.EXTERNAL_REDIRECT and job.external_url:
             print(f"[LinkedIn] Job redirects to external website. Delegating to Antigravity CLI...")
-            return self.external_handler.handle_redirect(job, interactive=True)
+            return self.external_handler.handle_redirect(job, interactive=False)
 
         self.user_data_dir.mkdir(parents=True, exist_ok=True)
         is_ci = os.getenv("CI", "false").lower() == "true" or os.getenv("HEADLESS", "false").lower() == "true" or not os.getenv("DISPLAY")
@@ -127,26 +118,44 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
             )
             page = browser.new_page()
             try:
+                # 1. Ensure authenticated session if credentials exist
+                self._ensure_login(page)
+
+                # 2. Navigate to Job URL
+                print(f"[LinkedIn] Navigating to job: {job.job_url}")
                 page.goto(job.job_url, timeout=35000)
                 page.wait_for_timeout(3000)
 
-                # Look for Apply button
-                apply_btn = page.locator("button.jobs-apply-button").first
+                # 3. Locate visible Apply Button
+                apply_btn = page.locator(".top-card-layout__cta-container button:has-text('Apply'), .top-card-layout__cta-container a:has-text('Apply'), button.jobs-apply-button:visible, button.apply-button:visible, button:has-text('Easy Apply'):visible, a:has-text('Apply'):visible").first
                 if not apply_btn.is_visible():
-                    print(f"[LinkedIn] No apply button found for {job.title}.")
+                    print(f"[LinkedIn] No direct apply button visible for {job.title}. Checking external portal links...")
+                    ext_link = page.locator("a[href*='workday'], a[href*='greenhouse'], a[href*='lever.co'], a[href*='taleo'], a[href*='ashby']").first
+                    if ext_link.is_visible():
+                        job.external_url = ext_link.get_attribute("href")
+                        job.apply_type = ApplyType.EXTERNAL_REDIRECT
+                        return self.external_handler.handle_redirect(job, interactive=False)
                     return False
 
                 btn_text = apply_btn.inner_text().lower()
-                if "easy apply" not in btn_text:
-                    # External redirect button
-                    print(f"[LinkedIn] External redirect button detected: '{btn_text}'")
-                    with page.expect_popup() as popup_info:
-                        apply_btn.click()
-                    ext_page = popup_info.value
-                    job.external_url = ext_page.url
+                href = apply_btn.get_attribute("href") or ""
+                
+                # Check for External redirect
+                if "easy apply" not in btn_text and (href.startswith("http") or "external" in btn_text or btn_text.strip() == "apply"):
+                    print(f"[LinkedIn] External portal redirect detected: '{btn_text}' -> {href or 'popup'}")
+                    if href.startswith("http") and "linkedin.com" not in href:
+                        job.external_url = href
+                    else:
+                        try:
+                            with page.expect_popup(timeout=8000) as popup_info:
+                                apply_btn.click()
+                            ext_page = popup_info.value
+                            job.external_url = ext_page.url
+                            ext_page.close()
+                        except Exception:
+                            job.external_url = job.job_url
                     job.apply_type = ApplyType.EXTERNAL_REDIRECT
-                    ext_page.close()
-                    return self.external_handler.handle_redirect(job, interactive=True)
+                    return self.external_handler.handle_redirect(job, interactive=False)
 
                 # Open Easy Apply modal
                 apply_btn.click()
@@ -207,6 +216,23 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 return False
             finally:
                 browser.close()
+
+    def _ensure_login(self, page):
+        """Ensure LinkedIn session is authenticated."""
+        try:
+            if not self.email or not self.password:
+                return
+            page.goto("https://www.linkedin.com/feed/", timeout=25000)
+            page.wait_for_timeout(3000)
+            if "login" in page.url or "feed" not in page.url:
+                print("[LinkedIn] Authenticating account session...")
+                page.goto("https://www.linkedin.com/login", timeout=25000)
+                page.fill("#username", self.email)
+                page.fill("#password", self.password)
+                page.click("button[type='submit']")
+                page.wait_for_timeout(4000)
+        except Exception as e:
+            print(f"[LinkedIn Auth Note] {e}")
 
     def _answer_form_inputs(self, page: Page, job_title: str):
         """Fills text inputs, selects, and radios using RAG generator."""

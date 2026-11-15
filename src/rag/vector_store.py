@@ -87,24 +87,32 @@ class LocalVectorStore:
 
     def match_job(self, title: str, description: str, skills_list: List[str]) -> Tuple[float, List[str], str]:
         """Calculates match score between candidate profile and a job posting."""
-        combined_job = f"{title} {description}"
+        combined_job = f"{title} {description}".lower()
         job_tokens = set(self.tokenize(combined_job))
 
         matched_skills = []
         for s in skills_list:
             clean_s = s.lower().strip()
-            if clean_s in job_tokens or any(re.search(r'\b' + re.escape(clean_s) + r'\b', combined_job, re.I) for _ in [1]):
+            if clean_s in job_tokens or clean_s in combined_job:
                 matched_skills.append(s)
 
         # Retrieve top relevant context from resume/GitHub
         top_docs = self.search(f"{title} {' '.join(matched_skills)}", top_k=3)
         relevant_context = "\n---\n".join([f"[{d.title}]:\n{d.content[:400]}" for d, _ in top_docs])
 
-        # Scoring heuristic
-        skill_ratio = (len(matched_skills) / max(len(skills_list) * 0.4, 1.0))
-        skill_score = min(skill_ratio, 1.0) * 0.7
-        bm25_bonus = 0.3 if len(top_docs) > 0 else 0.0
-        final_score = round(min(skill_score + bm25_bonus, 0.99), 2)
+        # Domain title keywords matching (Cloud, DevOps, Azure, AWS, SRE, Platform, Infrastructure)
+        domain_keywords = ["cloud", "devops", "azure", "aws", "infrastructure", "platform", "sre", "engineer", "analyst"]
+        title_matches = [w for w in domain_keywords if w in title.lower()]
+        title_score = min(len(title_matches) * 0.25, 0.50)
+
+        # Skills match scoring
+        skill_score = min(len(matched_skills) * 0.15, 0.40)
+        bm25_bonus = 0.20 if len(top_docs) > 0 else 0.0
+
+        final_score = round(min(title_score + skill_score + bm25_bonus, 0.98), 2)
+        # Ensure minimum baseline if domain title is an exact match
+        if title_score >= 0.40 and final_score < 0.70:
+            final_score = 0.75
 
         return final_score, matched_skills, relevant_context
 
