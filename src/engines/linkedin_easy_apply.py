@@ -169,20 +169,24 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                     job.apply_type = ApplyType.EXTERNAL_REDIRECT
                     return self.external_handler.handle_redirect(job, interactive=False)
 
-                # Click Apply button (using force=True to bypass transparent overlays)
+                # Click Apply button
                 print(f"[LinkedIn] Clicking apply button for {job.title}...")
+                popup_url = None
                 try:
-                    with page.expect_popup(timeout=4000) as popup_info:
+                    with page.expect_popup(timeout=2500) as popup_info:
                         apply_btn.click(force=True)
                     popup = popup_info.value
-                    if "linkedin.com" not in popup.url:
-                        job.external_url = popup.url
-                        job.apply_type = ApplyType.EXTERNAL_REDIRECT
-                        popup.close()
-                        return self.external_handler.handle_redirect(job, interactive=False)
+                    popup_url = popup.url
                     popup.close()
                 except Exception:
-                    apply_btn.click(force=True)
+                    # No popup window opened; clicked in-page
+                    pass
+
+                if popup_url and "linkedin.com" not in popup_url:
+                    print(f"[LinkedIn] External career portal opened: {popup_url}")
+                    job.external_url = popup_url
+                    job.apply_type = ApplyType.EXTERNAL_REDIRECT
+                    return self.external_handler.handle_redirect(job, interactive=False)
 
                 page.wait_for_timeout(2000)
 

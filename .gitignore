@@ -10,3 +10,4 @@ __pycache__/
 data/browser_sessions/
 data/applications/
 *.log
+*.png

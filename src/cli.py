@@ -17,6 +17,7 @@ from src.assistant.agy_bridge import AntigravityCLIBridge
 from src.profile_updater.linkedin_updater import LinkedInProfileUpdater
 from src.profile_updater.naukri_updater import NaukriProfileUpdater
 from src.engines.external_handler import ExternalRedirectHandler
+from src.engines.form_submitter import AutonomousFormSubmitter
 from src.engines.linkedin_easy_apply import LinkedInEasyApplyEngine
 from src.engines.naukri_apply import NaukriApplyEngine
 from src.notifier.discord import notifier
@@ -30,7 +31,8 @@ def get_context():
     generator = RAGGenerator(profile, vector_store)
     tracker = ApplicationTracker()
     agy_bridge = AntigravityCLIBridge()
-    external_handler = ExternalRedirectHandler(profile, vector_store, tracker, agy_bridge)
+    form_submitter = AutonomousFormSubmitter(profile, vector_store, generator, tracker)
+    external_handler = ExternalRedirectHandler(profile, vector_store, tracker, agy_bridge, form_submitter=form_submitter)
     return vector_store, profile, generator, tracker, agy_bridge, external_handler
 
 @app.command()
