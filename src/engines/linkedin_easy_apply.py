@@ -55,6 +55,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         job_url = link_el.get("href", "")
                         if "?" in job_url:
                             job_url = job_url.split("?")[0]
+                        job_url = job_url.replace("in.linkedin.com", "www.linkedin.com")
                         if not job_url.startswith("http"):
                             continue
 
@@ -130,9 +131,10 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 if not state_file.exists():
                     self._ensure_login(page)
 
-                # 2. Navigate to Job URL
-                print(f"[LinkedIn] Navigating to job: {job.job_url}")
-                page.goto(job.job_url, timeout=35000)
+                # 2. Navigate to Job URL (normalizing to www.linkedin.com)
+                target_url = job.job_url.replace("in.linkedin.com", "www.linkedin.com")
+                print(f"[LinkedIn] Navigating to job: {target_url}")
+                page.goto(target_url, timeout=35000, wait_until="domcontentloaded")
                 page.wait_for_timeout(3000)
 
                 # 3. Locate visible Apply Button
