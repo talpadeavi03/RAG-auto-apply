@@ -40,7 +40,7 @@ class ApplicationTracker:
     def is_already_applied(self, job_id: str) -> bool:
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT id FROM applications WHERE job_id = ? AND status IN ('applied', 'assisted')", (job_id,))
+            cursor.execute("SELECT id FROM applications WHERE job_id = ? AND status = 'applied'", (job_id,))
             return cursor.fetchone() is not None
 
     def record_job(self, record: ApplicationRecord):
