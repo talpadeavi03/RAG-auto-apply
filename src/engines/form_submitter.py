@@ -167,15 +167,19 @@ class AutonomousFormSubmitter:
 
     def _fill_standard_fields(self, page: Page, job: JobPost):
         """Intelligently detects and populates candidate details into inputs."""
-        name_parts = self.profile.name.split()
+        full_name = getattr(self.profile, "full_name", None) or getattr(self.profile, "name", "Avinash Vishnu Talpade")
+        name_parts = full_name.split()
         first_name = name_parts[0] if name_parts else "Avinash"
         last_name = " ".join(name_parts[1:]) if len(name_parts) > 1 else "Talpade"
+        exp_years = getattr(self.profile, "years_of_experience", None) or getattr(self.profile, "experience_years", 3.5)
+        notice_days = getattr(self.profile, "notice_period_days", 15)
+        current_comp = getattr(self.profile, "current_company", "Accenture")
 
         field_mappings = [
             # Name
             (["first_name", "firstname", "first name", "given name"], first_name),
             (["last_name", "lastname", "last name", "family name", "surname"], last_name),
-            (["full_name", "fullname", "full name", "applicant_name", "name"], self.profile.name),
+            (["full_name", "fullname", "full name", "applicant_name", "name"], full_name),
             # Contact
             (["email", "e-mail", "email address"], self.profile.email),
             (["phone", "mobile", "telephone", "phone number", "contact number"], self.profile.phone),
@@ -185,9 +189,9 @@ class AutonomousFormSubmitter:
             (["github", "github profile", "github url"], f"https://github.com/{self.profile.github_username or 'talpadeavi03'}"),
             (["portfolio", "website", "personal website", "portfolio url"], self.profile.portfolio_url or "https://talpadeavi03.github.io/intro"),
             # Experience & Notice
-            (["company", "current company", "employer"], "Accenture"),
-            (["experience", "years of experience", "total experience"], str(self.profile.experience_years)),
-            (["notice", "notice period", "availability"], "15 days"),
+            (["company", "current company", "employer"], current_comp),
+            (["experience", "years of experience", "total experience"], str(exp_years)),
+            (["notice", "notice period", "availability"], f"{notice_days} days"),
         ]
 
         inputs = page.locator("input[type='text'], input[type='email'], input[type='tel'], input:not([type])").all()
