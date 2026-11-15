@@ -40,9 +40,9 @@
       "doc_id": "resume_master",
       "source_type": "resume",
       "title": "Complete Resume Master",
-      "content": "# Senior Software Engineer\n\n**Email:** engineer@example.com | **Phone:** +91 9876543210 | **Location:** Bangalore, India  \n**GitHub:** [github.com/sudo69](https://github.com/sudo69) | **LinkedIn:** [linkedin.com/in/software-engineer](https://linkedin.com)\n\n---\n\n## Professional Summary\nSoftware Engineer with 3.5+ years of experience in architecting distributed backend services, full-stack web applications, and AI/RAG-driven workflows. Proven record in reducing API latency, containerizing microservices, and leading high-velocity deployments.\n\n---\n\n## Technical Skills\n- **Languages:** Python, TypeScript, JavaScript, SQL, Bash\n- **Frameworks & Libraries:** FastAPI, Flask, Django, React, Next.js, Node.js, PyTorch\n- **AI & RAG:** LLM API Integrations, Vector Databases (Chroma, FAISS), Retrieval-Augmented Generation, LangChain\n- **Databases & Caching:** PostgreSQL, MySQL, Redis, MongoDB\n- **DevOps & Cloud:** Docker, Kubernetes, AWS (EC2, S3, RDS), GitHub Actions, Terraform, Linux\n\n---\n\n## Work History\n### **Software Engineer | Tech Innovations** (2022 \u2013 Present)\n- Designed and maintained high-throughput RESTful microservices using FastAPI and PostgreSQL handling 20M+ monthly requests.\n- Integrated RAG-powered semantic search pipelines improving internal query relevance by 45%.\n- Reduced database read latencies by 35% through Redis caching layers and query index optimizations.\n- Orchestrated containerized deployments via Docker and Kubernetes on AWS.\n\n### **Associate Software Developer | CloudScale Labs** (2021 \u2013 2022)\n- Built interactive client-facing dashboards in React with real-time WebSocket feeds.\n- Automated CI/CD pipelines using GitHub Actions, cutting release deployment cycles by 50%.\n\n---\n\n## Featured GitHub & Open Source Projects\n- **RAG-AG-Apply:** Autonomous job application and profile synchronization system using RAG knowledge bases and Antigravity CLI.\n- **Distributed Cache Engine:** Lightweight high-concurrency key-value store in Python and Redis.\n- **API Gateway Starter:** Production-grade gateway supporting rate limiting, JWT validation, and reverse proxy routing.\n\n---\n\n## Education\n**Bachelor of Technology (B.Tech) in Computer Science & Engineering**  \nFirst Class with Distinction\n",
+      "content": "# Avinash Vishnu Talpade\n**Cloud Engineer | Cloud Infrastructure Analyst**  \n- **Email:** talpadeavi0303@gmail.com  \n- **Phone:** +91 8999285015  \n- **Location:** Pune, India  \n- **LinkedIn:** [linkedin.com/in/avinashtalpade](https://www.linkedin.com/in/avinashtalpade)  \n- **GitHub & Portfolio:** [talpadeavi03.github.io/intro](https://talpadeavi03.github.io/intro) | GitHub: `talpadeavi03`\n\n---\n\n## Professional Summary\nResults-driven Cloud Engineer and Cloud Infrastructure Analyst with 3.5 years of enterprise experience at Accenture managing multi-cloud (Azure & AWS) environments. Proven track record in Infrastructure as Code (IaC) with Terraform, CI/CD pipeline automation (Azure DevOps, GitHub Actions, Jenkins), and container orchestration with Docker & Kubernetes. Actively implementing AIOps, MLOps, LLMOps, and Prompt Engineering into modern cloud workflows.\n\n---\n\n## Technical Skills\n- **Cloud Platforms:** Azure, AWS, Azure Database for PostgreSQL / MySQL\n- **DevOps & IaC:** Terraform, Ansible, Infrastructure as Code (IaC), DevSecOps, Agile/ITIL\n- **Containers & Orchestration:** Docker, Kubernetes (K8s), Helm\n- **CI/CD & Version Control:** GitHub Actions, Jenkins, Azure DevOps, GitLab CI/CD, Git, GitHub, Git Flow, GitLab, Azure Repos\n- **AI & Modern Ops:** AIOps, MLOps, LLMOps, Prompt Engineering, MCP (Model Context Protocol) tooling\n- **Scripting & Automation:** Python, PowerShell, Bash, Shell Scripting\n- **Identity & Security:** Microsoft Entra ID (Azure AD), IAM, Azure RBAC, Microsoft Defender, Microsoft Sentinel\n- **Monitoring & Observability:** Azure Monitor, Log Analytics, Prometheus, Grafana, CloudWatch, Alerting\n- **Operating Systems:** Linux (RHEL/Ubuntu), Windows Server\n\n---\n\n## Professional Experience\n### **Accenture \u2014 Cloud Infrastructure Analyst**\n*03/2022 \u2013 08/2025 | Pune, India*\n- Supported and maintained enterprise Azure and AWS environments, ensuring high availability, reliability, and smooth day-to-day operations.\n- Automated infrastructure provisioning and deployments using Terraform and Infrastructure as Code (IaC), while building and maintaining CI/CD pipelines with Azure DevOps, GitHub Actions, GitLab CI/CD, and Jenkins.\n- Developed automation scripts in PowerShell, Bash, and Python to eliminate repetitive tasks, improve operational efficiency, and reduce deployment time.\n- Worked with Docker and Kubernetes to deploy, manage, and scale containerized applications across cloud environments.\n- Monitored infrastructure health and strengthened security using Azure Monitor, Prometheus, Grafana, Microsoft Sentinel, and Microsoft Defender to improve system visibility and incident response.\n- Followed Git-based development workflows using Git, GitHub, GitLab, Azure Repos, branching strategies, pull requests, code reviews, and version control best practices.\n- Built hands-on projects in AIOps, MLOps, and LLMOps, implementing CI/CD for machine learning workflows, model deployment automation, containerization, Kubernetes orchestration, and MCP-based tooling to explore modern AI-driven cloud operations.\n\n---\n\n## Education\n- **Master's in Computer Application (MCA)** \u2014 Savitribai Phule Pune University (CGPA: 7)\n- **Bachelor's in Computer Science (BCS)** \u2014 Savitribai Phule Pune University (CGPA: 7)\n\n---\n\n## Certifications\n- **AZ-900:** Microsoft Certified: Azure Fundamentals\n- **DVA-C02:** AWS Certified Developer - Associate (In-Progress)\n- **AZ-400:** Designing and Implementing Microsoft DevOps Solutions (In-Progress)\n\n---\n\n## Languages\n- English, Hindi, Marathi\n",
       "metadata": {
-        "filename": "sample_resume.md",
+        "filename": "avinash_talpade_resume.md",
         "type": "master"
       }
     },
@@ -50,7 +50,7 @@
       "doc_id": "resume_sec_##",
       "source_type": "resume",
       "title": "Resume Section: ##",
-      "content": "Education",
+      "content": "Certifications",
       "metadata": {
         "section": "##"
       }
@@ -71,6 +71,204 @@
       "content": "### **Software Engineer | Tech Innovations** (2022 \u2013 Present)\n- Designed and maintained high-throughput RESTful microservices using FastAPI and PostgreSQL handling 20M+ monthly requests.\n- Integrated RAG-powered semantic search pipelines improving internal query relevance by 45%.\n- Reduced database read latencies by 35% through Redis caching layers and query index optimizations.\n- Orchestrated containerized deployments via Docker and Kubernetes on AWS.\n\n### **Associate Software Developer | CloudScale Labs** (2021 \u2013 2022)\n- Built interactive client-facing dashboards in React with real-time WebSocket feeds.\n- Automated CI/CD pipelines using GitHub Actions, cutting release deployment cycles by 50%.\n\n---\n\n## Featured GitHub & Open Source Projects\n- **RAG-AG-Apply:** Autonomous job application and profile synchronization system using RAG knowledge bases and Antigravity CLI.\n- **Distributed Cache Engine:** Lightweight high-concurrency key-value store in Python and Redis.\n- **API Gateway Starter:** Production-grade gateway supporting rate limiting, JWT validation, and reverse proxy routing.\n\n---",
       "metadata": {
         "section": "work history"
+      }
+    },
+    {
+      "doc_id": "github_repo_RAG-auto-apply",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: RAG-auto-apply ()",
+      "content": "Project Name: RAG-auto-apply\nLanguage: \nStars: 0\nDescription: \nURL: https://github.com/talpadeavi03/RAG-auto-apply",
+      "metadata": {
+        "name": "RAG-auto-apply",
+        "language": "",
+        "stars": 0,
+        "url": "https://github.com/talpadeavi03/RAG-auto-apply"
+      }
+    },
+    {
+      "doc_id": "github_repo_job-apply",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: job-apply (Python)",
+      "content": "Project Name: job-apply\nLanguage: Python\nStars: 1\nDescription: \nREADME Highlights:\n# \u26a1 AetherApply \u2014 Autonomous Job Discovery & Auto-Applier Platform\n[![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)\n[![Playwright](https://img.shields.io/badge/Playwright-Chromium-green.svg)](https://playwright.dev/)\n[![Gemini MCP](https://img.shields.io/badge/AI-Google%20Gemini%202.5-orange.svg)](https://ai.google.dev/)\n[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-Automated%204h%20Cron-purple.svg)](https://github.com/features/actions)\n[![Discord Alerts](https://img.shields.io/badge/Discord-Realtime%20Radar-5865F2.svg)](https://discord.com/)\n**AetherApply** is an autonomous, cloud-native job search, intelligent matching, and auto-application platform. It is engineered to run unattended in the cloud via **GitHub Actions every 4 hours** (or locally on your workstation).\nIt parses alert emails and active job portals, extracts deep requirements from job descriptions, scores opportunities against your master resume using semantic NLP, fills out custom application questions using **Gemini Model Context Protocol (MCP)** reasoning, attaches your PDF resume, and submits applications automatically while sending real-time receipts to your **Discord channel**.\n---\n## Table of Contents\n- [Key Capabilities](#key-capabilities)\n- [Architecture & Flow](#architecture--flow)\n- [Supported Platforms](#supported-platforms)\n- [Prerequisites](#prerequisites)\n- [Quick Start: Local Setup](#quick-start-local-setup)\n- [Candidate Customization](#cand\nURL: https://github.com/talpadeavi03/job-apply",
+      "metadata": {
+        "name": "job-apply",
+        "language": "Python",
+        "stars": 1,
+        "url": "https://github.com/talpadeavi03/job-apply"
+      }
+    },
+    {
+      "doc_id": "github_repo_auto-browser",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: auto-browser (Python)",
+      "content": "Project Name: auto-browser\nLanguage: Python\nStars: 1\nDescription: Anti-Detect Job RPA Suite & MCP Server for Naukri and LinkedIn\nREADME Highlights:\n# \ud83d\ude80 Auto-Browser 2.0 & Aether CareerOS\n### Autonomous Multi-Platform Recruitment Operating System \u2022 100% Free Cloud Architecture \u2022 Powered by FastMCP & SLM Engine v2\n[![CI/CD 24/7 Cloud Automation](https://github.com/talpadeavi03/auto-browser/actions/workflows/job-automation.yml/badge.svg?branch=2.0)](https://github.com/talpadeavi03/auto-browser/actions)\n[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)\n[![Playwright Stealth](https://img.shields.io/badge/Browser-Playwright%20Stealth-2EAD33.svg?logo=playwright&logoColor=white)](https://playwright.dev/)\n[![Compute Cost](https://img.shields.io/badge/Cloud%20Compute-%240.00%20(100%25%20Free)-success.svg)](#-zero-cost-free-cloud-infrastructure)\n[![Protocol](https://img.shields.io/badge/Protocol-FastMCP%20JSON--RPC-00C7B7.svg)](#-fastmcp-server-architecture)\n[![Dataset](https://img.shields.io/badge/Continuous%20Dataset-386%2B%20Verified%20Q%26A-orange.svg)](#-continuous-mlops--slm-flywheel)\n[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/talpadeavi03/auto-browser/blob/2.0/notebooks/train_colab.ipynb)\n**Auto-Browser 2.0** is an enterprise-grade autonomous recruitment operating system running **100% in the cloud on free-tier infrastructure ($0.00 compute spend)**. It discovers jobs across 9 platforms, monitors incoming recruiter emails via Gmail, analyzes requirements using semantic cross-enco\nURL: https://github.com/talpadeavi03/auto-browser",
+      "metadata": {
+        "name": "auto-browser",
+        "language": "Python",
+        "stars": 1,
+        "url": "https://github.com/talpadeavi03/auto-browser"
+      }
+    },
+    {
+      "doc_id": "github_repo_dual-monitor",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: dual-monitor (Python)",
+      "content": "Project Name: dual-monitor\nLanguage: Python\nStars: 0\nDescription: duplicate on old monitor\nREADME Highlights:\n# Dual-Monitor \ud83d\udda5\ufe0f\u26a1\n[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)\n[![Platform: Linux](https://img.shields.io/badge/Platform-Linux-blue.svg)](https://www.kernel.org)\n[![Wayland / X11](https://img.shields.io/badge/Display-Wayland%20%7C%20X11-green.svg)](https://wayland.freedesktop.org)\n[![Framerate: 60 FPS](https://img.shields.io/badge/Framerate-60%20FPS%20Locked-success.svg)](https://github.com/talpadeavi03/dual-monitor)\n[![Latency: ~1ms](https://img.shields.io/badge/Decode%20Latency-~1ms%20SIMD-orange.svg)](https://github.com/talpadeavi03/dual-monitor)\n**Dual-Monitor** is a bare-metal, ultra-low-latency Linux second-screen utility designed to turn any spare Linux laptop or desktop into a smooth, zero-bloat extended monitor over a direct Ethernet cable or local network.\nSpecifically tested, engineered, and optimized for:\n* **Host Laptop:** Modern Wayland compositors (e.g., **HP Pavilion on elementary OS 8 / GNOME / Ubuntu 24.04**).\n* **Client Laptop:** Legacy, low-spec hardware (e.g., **Dell Vostro 1015 on Arch Linux with Intel Core 2 Duo & GMA 4500MHD graphics**).\n* **Connection:** Direct point-to-point RJ-45 Ethernet cable (no router, switch, or DHCP server required).\n---\n## \ud83d\ude80 Why \"Bare-Metal\"? (The Engineering Details)\nMost wireless display solutions (such as Deskreen, spacedesk, or generic VNC) rely on heavy software stacks like Electron, WebRTC, Chromium browsers, or generic H.264 software decoders.\nOn older cli\nURL: https://github.com/talpadeavi03/dual-monitor",
+      "metadata": {
+        "name": "dual-monitor",
+        "language": "Python",
+        "stars": 0,
+        "url": "https://github.com/talpadeavi03/dual-monitor"
+      }
+    },
+    {
+      "doc_id": "github_repo_test-mcp",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: test-mcp (Python)",
+      "content": "Project Name: test-mcp\nLanguage: Python\nStars: 1\nDescription: mcp from scratch\nURL: https://github.com/talpadeavi03/test-mcp",
+      "metadata": {
+        "name": "test-mcp",
+        "language": "Python",
+        "stars": 1,
+        "url": "https://github.com/talpadeavi03/test-mcp"
+      }
+    },
+    {
+      "doc_id": "github_repo_AetherOS-mini",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: AetherOS-mini (C)",
+      "content": "Project Name: AetherOS-mini\nLanguage: C\nStars: 1\nDescription: \nREADME Highlights:\n# AetherOS: AI-Native Operating System (Arch Linux + Hyprland + Hyprdots)\n**AetherOS** is an AI-Native 64-bit operating system combining a modern **Arch Linux** base with the **Hyprland** Wayland compositor styled after [Hyprdots](https://github.com/prasanthrangan/hyprdots.git), and the **Kernel Model Context Protocol (MCP) Daemon & SLM Intelligence Core (`aether-mcpd`)**.\n---\n## \ud83d\udcf8 Desktop Preview\n---\n## \ud83c\udf1f Highlights\n- **Ambient Sensory Pipeline (Phase 2)**:\n- **Vision Engine (`aether-visiond`)**: Real-time biometric verification, gaze vector tracking, Eye Aspect Ratio (EAR) blink rate & posture monitoring.\n- **Voice Intelligence (`aether-voiced`)**: Low-latency neural and phonetic speech synthesis (`espeak-ng`), wake-word activity, and voice mode controls.\n- **Vector Memory (`aether-memd`)**: Persistent SQLite vector vault with cosine similarity retrieval and user/system Knowledge Graph.\n- **Micro-Intent Router (`aether-intentd`)**: Sub-15ms deterministic natural language intent resolution mapping speech or text to kernel and system actions.\n- **Hyprdots Aesthetic**: Catppuccin Mocha / Ros\u00e9 Pine color scheme, 10px rounded corners, dual-pass frosted glass blur, 45-degree border gradients (`rgba(ca9ee6ff) rgba(f2d5cfff)`), and smooth bezier animations.\n- **Floating Capsule Waybar**: Modular pill-style bar with workspace switcher, date/time, live CPU/RAM metrics, active **`\udb80\ude08 Vision Active`** sensory pill, and **`\udb81\udea9 AI Copilot`** status indicator.\n- **Rofi Application Launcher**:\nURL: https://github.com/talpadeavi03/AetherOS-mini",
+      "metadata": {
+        "name": "AetherOS-mini",
+        "language": "C",
+        "stars": 1,
+        "url": "https://github.com/talpadeavi03/AetherOS-mini"
+      }
+    },
+    {
+      "doc_id": "github_repo_intro",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: intro (HTML)",
+      "content": "Project Name: intro\nLanguage: HTML\nStars: 1\nDescription: retro-minecraft\nREADME Highlights:\nhttps://talpadeavi03.github.io/intro/index.html\nURL: https://github.com/talpadeavi03/intro",
+      "metadata": {
+        "name": "intro",
+        "language": "HTML",
+        "stars": 1,
+        "url": "https://github.com/talpadeavi03/intro"
+      }
+    },
+    {
+      "doc_id": "github_repo_learning-bot",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: learning-bot (HTML)",
+      "content": "Project Name: learning-bot\nLanguage: HTML\nStars: 1\nDescription: learning-tracker-bot\nREADME Highlights:\n# \ud83c\udf0c AETHER OS (JARVIS NEXUS)\n[https://learning-bot.talpadeavi0303.workers.dev]\nThe Personal AI Operating System > Behavior Tracking \u00b7 Flow Prediction \u00b7 Productivity Intelligence > Status: v3.0 - Production Ready | Cost: $0.00/mo | Updated: April 2026\n\ud83d\ude80 System Overview\nAETHER OS is a self-hosted, personal intelligence layer built entirely on Cloudflare's Free Tier and GitHub Actions. It transforms your digital exhaust (messages, commits, logs) into actionable flow-state predictions and automated life-management.\n\ud83d\udee0\ufe0f The Zero-Cost Tech Stack\nBrain: Cloudflare Workers (Llama 3 8B, Whisper, LLaVA 1.5)\nMemory: Cloudflare KV (Real-time) + GitHub (Long-term CSV/Parquet)\nInterface: Telegram Bot + PWA Dashboard (Cloudflare Pages)\nEngine: Python ML Pipeline (RandomForest / GBM) via GitHub Actions\nObservability: MLflow via DagsHub\n\ud83c\udfd7\ufe0f Architecture & Data Flow\nAETHER operates on a \"Capture-Process-Predict\" loop.\nThe Lifecycle of an Event:\nIngestion: User sends text, voice, or image via Telegram or pushes code to GitHub.\nNLP Extraction: Llama 3 parses the input into 22 behavioral features (Energy, Stress, Focus, etc.).\nStorage: Raw data is cached in Cloudflare KV.\nThe Nightly Brain: GitHub Actions pulls KV data, runs the ML Pipeline, trains models, and pushes a fresh dashboard.json back to the UI.\n\ud83e\udde0 Machine Learning Capabilities\nAETHER doesn't just log; it predicts.\nModel\tPurpose\tArchitecture\tAccuracy\nFlow Classifier\tPredicts current state (FLOW, ANXIETY, RECOVERY)\tRandomForest\t98.9% (CV)\nE\nURL: https://github.com/talpadeavi03/learning-bot",
+      "metadata": {
+        "name": "learning-bot",
+        "language": "HTML",
+        "stars": 1,
+        "url": "https://github.com/talpadeavi03/learning-bot"
+      }
+    },
+    {
+      "doc_id": "github_repo_televerse",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: televerse (TypeScript)",
+      "content": "Project Name: televerse\nLanguage: TypeScript\nStars: 1\nDescription: \nREADME Highlights:\n---\ntitle: TeleVerse\nemoji: \ud83c\udf0c\ncolorFrom: indigo\ncolorTo: purple\nsdk: docker\napp_port: 7860\npinned: false\n---\n# TeleVerse \ud83c\udf0c\n> **Telegram-powered cloud file manager** \u2014 store unlimited files in your own Telegram account with an intelligent AI-enhanced manager UI.\n[![CI Pipeline](https://github.com/talpadeavi03/televerse/actions/workflows/ci.yml/badge.svg)](https://github.com/talpadeavi03/televerse/actions/workflows/ci.yml)\n[![Deployment Status](https://img.shields.io/badge/HF_Space-Live-success?logo=huggingface&color=FFD21E)](https://talpadeavi20-televerse.hf.space)\n[![Platform Version](https://img.shields.io/badge/version-v1.0.0--bp%20%7C%20Phase%201-blue.svg)](file:///home/sudo69/devops-core/televerse/mds/Phase1_Foundation.md)\n[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)\nTeleVerse operates as a custom third-party messaging client utilizing the **Telegram MTProto Client API** via **GramJS** in Node.js. By connecting their own Telegram accounts, users gain unlimited storage directly inside their own personal \"Saved Messages\" channel, enjoying total privacy and control.\n---\n## \ud83d\ude80 Release Tracks & Versioning\nWe utilize explicit versioning milestones to track development phases and support reliable Quality Assurance checks:\n### \ud83d\udfe2 Phase 1: Foundation \u2014 `v1.0.0-bp` (Baseline Prototype)\n*Status: **Released & Operational** | Live Environment: [https://talpadeavi20-televerse.hf.space](https://talpadeavi20-televerse.hf.space)*\n* **Visual Identity & Shel\nURL: https://github.com/talpadeavi03/televerse",
+      "metadata": {
+        "name": "televerse",
+        "language": "TypeScript",
+        "stars": 1,
+        "url": "https://github.com/talpadeavi03/televerse"
+      }
+    },
+    {
+      "doc_id": "github_repo_football-ml",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: football-ml (Python)",
+      "content": "Project Name: football-ml\nLanguage: Python\nStars: 1\nDescription: training ml model as of now\nREADME Highlights:\nGame logic is wrong while sorting Team  A and Team B as the old logic was at the start of match the teams seperated at the center line was the input of the faces.\nI didnt have enough data to feed to train the ML as of now for accuracy.\nURL: https://github.com/talpadeavi03/football-ml",
+      "metadata": {
+        "name": "football-ml",
+        "language": "Python",
+        "stars": 1,
+        "url": "https://github.com/talpadeavi03/football-ml"
+      }
+    },
+    {
+      "doc_id": "github_repo_OpsBrain",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: OpsBrain ()",
+      "content": "Project Name: OpsBrain\nLanguage: \nStars: 0\nDescription: logs\nURL: https://github.com/talpadeavi03/OpsBrain",
+      "metadata": {
+        "name": "OpsBrain",
+        "language": "",
+        "stars": 0,
+        "url": "https://github.com/talpadeavi03/OpsBrain"
+      }
+    },
+    {
+      "doc_id": "github_repo_arch_min1.1",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: arch_min1.1 (Shell)",
+      "content": "Project Name: arch_min1.1\nLanguage: Shell\nStars: 0\nDescription: self heal and offline q model\nREADME Highlights:\n# Arch AI Installer\nA minimal Arch Linux desktop installer with Openbox + Hyprland support.\n## Upload these files to GitHub\nRecommended repository structure:\narch-ai-installer/\n\u2502\n\u251c\u2500\u2500 install.sh\n\u251c\u2500\u2500 ai/\n\u2502   \u2514\u2500\u2500 healer.sh\n\u251c\u2500\u2500 config/\n\u2502   \u251c\u2500\u2500 hyprland.conf\n\u2502   \u2514\u2500\u2500 openbox/\n\u251c\u2500\u2500 README.md\n\u251c\u2500\u2500 LICENSE\n\u2514\u2500\u2500 .gitignore\n## Files\n### install.sh\nMain installation script.\nFeatures: - Installs Openbox X11 - Installs Hyprland Wayland - Installs\nTerminator terminal - Installs git, wget, curl - Creates basic\nconfigurations - Generates installation logs\n### ai/healer.sh\nSmall Language Model (SLM) helper.\nPurpose: - Reads installation errors - Analyzes logs - Suggests safe\nfixes\nDesigned for low RAM systems using: - llama.cpp - Qwen2.5 0.5B / Tiny\nmodels\n## System Target\nRecommended: - Arch Linux minimal installation - 2GB+ RAM - CPU based\nsystems\n## Installation\n``` bash\nchmod +x install.sh\n./install.sh\n```\n## Future Plans\n-   Hardware detection\n-   Automatic driver setup\n-   Package recovery\n-   Local AI Linux assistant\n-   AETHER integration\nURL: https://github.com/talpadeavi03/arch_min1.1",
+      "metadata": {
+        "name": "arch_min1.1",
+        "language": "Shell",
+        "stars": 0,
+        "url": "https://github.com/talpadeavi03/arch_min1.1"
+      }
+    },
+    {
+      "doc_id": "github_repo_archlinux",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: archlinux ()",
+      "content": "Project Name: archlinux\nLanguage: \nStars: 0\nDescription: pull settings\nURL: https://github.com/talpadeavi03/archlinux",
+      "metadata": {
+        "name": "archlinux",
+        "language": "",
+        "stars": 0,
+        "url": "https://github.com/talpadeavi03/archlinux"
+      }
+    },
+    {
+      "doc_id": "github_repo_levels",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: levels (JavaScript)",
+      "content": "Project Name: levels\nLanguage: JavaScript\nStars: 2\nDescription: levels\nREADME Highlights:\n# test\nURL: https://github.com/talpadeavi03/levels",
+      "metadata": {
+        "name": "levels",
+        "language": "JavaScript",
+        "stars": 2,
+        "url": "https://github.com/talpadeavi03/levels"
+      }
+    },
+    {
+      "doc_id": "github_repo_job-bot",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: job-bot (JavaScript)",
+      "content": "Project Name: job-bot\nLanguage: JavaScript\nStars: 0\nDescription: \nURL: https://github.com/talpadeavi03/job-bot",
+      "metadata": {
+        "name": "job-bot",
+        "language": "JavaScript",
+        "stars": 0,
+        "url": "https://github.com/talpadeavi03/job-bot"
+      }
+    },
+    {
+      "doc_id": "resume_sec_-_**cloud_platforms:**_azure,_aws,_azure_database_for_postgresql_/_mysql\n-_**devops_&_iac:**_terraform,_ansible,_infrastructure_as_code_(iac),_devsecops,_agile/itil\n-_**containers_&_orchestration:**_docker,_kubernetes_(k8s),_helm\n-_**ci/cd_&_version_control:**_github_actions,_jenkins,_azure_devops,_gitlab_ci/cd,_git,_github,_git_flow,_gitlab,_azure_repos\n-_**ai_&_modern_ops:**_aiops,_mlops,_llmops,_prompt_engineering,_mcp_(model_context_protocol)_tooling\n-_**scripting_&_automation:**_python,_powershell,_bash,_shell_scripting\n-_**identity_&_security:**_microsoft_entra_id_(azure_ad),_iam,_azure_rbac,_microsoft_defender,_microsoft_sentinel\n-_**monitoring_&_observability:**_azure_monitor,_log_analytics,_prometheus,_grafana,_cloudwatch,_alerting\n-_**operating_systems:**_linux_(rhel/ubuntu),_windows_server\n\n---\n\n##_professional_experience\n###_**accenture_\u2014_cloud_infrastructure_analyst**\n*03/2022_\u2013_08/2025_|_pune,_india*\n-_supported_and_maintained_enterprise_azure_and_aws_environments,_ensuring_high_availability,_reliability,_and_smooth_day-to-day_operations.\n-_automated_infrastructure_provisioning_and_deployments_using_terraform_and_infrastructure_as_code_(iac),_while_building_and_maintaining_ci/cd_pipelines_with_azure_devops,_github_actions,_gitlab_ci/cd,_and_jenkins.\n-_developed_automation_scripts_in_powershell,_bash,_and_python_to_eliminate_repetitive_tasks,_improve_operational_efficiency,_and_reduce_deployment_time.\n-_worked_with_docker_and_kubernetes_to_deploy,_manage,_and_scale_containerized_applications_across_cloud_environments.\n-_monitored_infrastructure_health_and_strengthened_security_using_azure_monitor,_prometheus,_grafana,_microsoft_sentinel,_and_microsoft_defender_to_improve_system_visibility_and_incident_response.\n-_followed_git-based_development_workflows_using_git,_github,_gitlab,_azure_repos,_branching_strategies,_pull_requests,_code_reviews,_and_version_control_best_practices.\n-_built_hands-on_projects_in_aiops,_mlops,_and_llmops,_implementing_ci/cd_for_machine_learning_workflows,_model_deployment_automation,_containerization,_kubernetes_orchestration,_and_mcp-based_tooling_to_explore_modern_ai-driven_cloud_operations.\n\n---",
+      "source_type": "resume",
+      "title": "Resume Section: - **cloud platforms:** azure, aws, azure database for postgresql / mysql\n- **devops & iac:** terraform, ansible, infrastructure as code (iac), devsecops, agile/itil\n- **containers & orchestration:** docker, kubernetes (k8s), helm\n- **ci/cd & version control:** github actions, jenkins, azure devops, gitlab ci/cd, git, github, git flow, gitlab, azure repos\n- **ai & modern ops:** aiops, mlops, llmops, prompt engineering, mcp (model context protocol) tooling\n- **scripting & automation:** python, powershell, bash, shell scripting\n- **identity & security:** microsoft entra id (azure ad), iam, azure rbac, microsoft defender, microsoft sentinel\n- **monitoring & observability:** azure monitor, log analytics, prometheus, grafana, cloudwatch, alerting\n- **operating systems:** linux (rhel/ubuntu), windows server\n\n---\n\n## professional experience\n### **accenture \u2014 cloud infrastructure analyst**\n*03/2022 \u2013 08/2025 | pune, india*\n- supported and maintained enterprise azure and aws environments, ensuring high availability, reliability, and smooth day-to-day operations.\n- automated infrastructure provisioning and deployments using terraform and infrastructure as code (iac), while building and maintaining ci/cd pipelines with azure devops, github actions, gitlab ci/cd, and jenkins.\n- developed automation scripts in powershell, bash, and python to eliminate repetitive tasks, improve operational efficiency, and reduce deployment time.\n- worked with docker and kubernetes to deploy, manage, and scale containerized applications across cloud environments.\n- monitored infrastructure health and strengthened security using azure monitor, prometheus, grafana, microsoft sentinel, and microsoft defender to improve system visibility and incident response.\n- followed git-based development workflows using git, github, gitlab, azure repos, branching strategies, pull requests, code reviews, and version control best practices.\n- built hands-on projects in aiops, mlops, and llmops, implementing ci/cd for machine learning workflows, model deployment automation, containerization, kubernetes orchestration, and mcp-based tooling to explore modern ai-driven cloud operations.\n\n---",
+      "content": "##",
+      "metadata": {
+        "section": "- **cloud platforms:** azure, aws, azure database for postgresql / mysql\n- **devops & iac:** terraform, ansible, infrastructure as code (iac), devsecops, agile/itil\n- **containers & orchestration:** docker, kubernetes (k8s), helm\n- **ci/cd & version control:** github actions, jenkins, azure devops, gitlab ci/cd, git, github, git flow, gitlab, azure repos\n- **ai & modern ops:** aiops, mlops, llmops, prompt engineering, mcp (model context protocol) tooling\n- **scripting & automation:** python, powershell, bash, shell scripting\n- **identity & security:** microsoft entra id (azure ad), iam, azure rbac, microsoft defender, microsoft sentinel\n- **monitoring & observability:** azure monitor, log analytics, prometheus, grafana, cloudwatch, alerting\n- **operating systems:** linux (rhel/ubuntu), windows server\n\n---\n\n## professional experience\n### **accenture \u2014 cloud infrastructure analyst**\n*03/2022 \u2013 08/2025 | pune, india*\n- supported and maintained enterprise azure and aws environments, ensuring high availability, reliability, and smooth day-to-day operations.\n- automated infrastructure provisioning and deployments using terraform and infrastructure as code (iac), while building and maintaining ci/cd pipelines with azure devops, github actions, gitlab ci/cd, and jenkins.\n- developed automation scripts in powershell, bash, and python to eliminate repetitive tasks, improve operational efficiency, and reduce deployment time.\n- worked with docker and kubernetes to deploy, manage, and scale containerized applications across cloud environments.\n- monitored infrastructure health and strengthened security using azure monitor, prometheus, grafana, microsoft sentinel, and microsoft defender to improve system visibility and incident response.\n- followed git-based development workflows using git, github, gitlab, azure repos, branching strategies, pull requests, code reviews, and version control best practices.\n- built hands-on projects in aiops, mlops, and llmops, implementing ci/cd for machine learning workflows, model deployment automation, containerization, kubernetes orchestration, and mcp-based tooling to explore modern ai-driven cloud operations.\n\n---"
+      }
+    },
+    {
+      "doc_id": "resume_sec_education",
+      "source_type": "resume",
+      "title": "Resume Section: Education",
+      "content": "- **Master's in Computer Application (MCA)** \u2014 Savitribai Phule Pune University (CGPA: 7)\n- **Bachelor's in Computer Science (BCS)** \u2014 Savitribai Phule Pune University (CGPA: 7)\n\n---",
+      "metadata": {
+        "section": "education"
       }
     }
   ]

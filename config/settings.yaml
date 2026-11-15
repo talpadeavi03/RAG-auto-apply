@@ -8,9 +8,9 @@ general:
   user_data_dir: "data/browser_sessions"
 
 github:
-  username: "sudo69"
+  username: "talpadeavi03"
   token: ""
-  max_repos: 10
+  max_repos: 15
   include_forks: false
 
 linkedin:
@@ -18,13 +18,18 @@ linkedin:
   email: ""
   password: ""
   target_titles:
-    - "Software Engineer"
-    - "Full Stack Developer"
-    - "Backend Engineer"
-    - "AI Engineer"
+    - "Cloud Engineer"
+    - "Cloud Infrastructure Analyst"
+    - "DevOps Engineer"
+    - "Site Reliability Engineer"
+    - "Platform Engineer"
+    - "AIOps Engineer"
   locations:
+    - "Pune"
+    - "Bangalore"
+    - "Hyderabad"
+    - "Mumbai"
     - "Remote"
-    - "India"
   experience_levels:
     - "Associate"
     - "Mid-Senior level"
@@ -35,17 +40,20 @@ naukri:
   email: ""
   password: ""
   keywords:
-    - "Python"
-    - "FastAPI"
-    - "Full Stack"
-    - "React"
-    - "AI"
+    - "Cloud Engineer"
+    - "Azure"
+    - "AWS"
+    - "DevOps"
+    - "Terraform"
+    - "Kubernetes"
+    - "AIOps"
   locations:
+    - "Pune"
     - "Bangalore"
     - "Hyderabad"
-    - "Pune"
+    - "Mumbai"
     - "Remote"
-  min_experience_years: 1
+  min_experience_years: 2
   max_experience_years: 5
   auto_apply: true
 

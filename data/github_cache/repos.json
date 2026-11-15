@@ -1,35 +1,112 @@
 [
   {
-    "name": "Def",
-    "full_name": "sudo69/Def",
-    "description": "This Repo is for teaching student and the beginners about the functions in python",
-    "html_url": "https://github.com/sudo69/Def",
-    "stars": 0,
-    "language": "Python",
-    "topics": [],
-    "readme_summary": "# Def\nThis Repo is for teaching student and the beginners about the functions in python",
-    "key_technologies": []
-  },
-  {
-    "name": "AutomateWithPython",
-    "full_name": "sudo69/AutomateWithPython",
-    "description": "Automation",
-    "html_url": "https://github.com/sudo69/AutomateWithPython",
-    "stars": 0,
-    "language": "Python",
-    "topics": [],
-    "readme_summary": "this code will input some simple value in list as user input",
-    "key_technologies": []
-  },
-  {
-    "name": "Hello-World",
-    "full_name": "sudo69/Hello-World",
-    "description": "My First Repo",
-    "html_url": "https://github.com/sudo69/Hello-World",
+    "name": "RAG-auto-apply",
+    "full_name": "talpadeavi03/RAG-auto-apply",
+    "description": "",
+    "html_url": "https://github.com/talpadeavi03/RAG-auto-apply",
     "stars": 0,
     "language": "",
     "topics": [],
-    "readme_summary": "# Hello-World\nMy First Repo",
+    "readme_summary": "",
+    "key_technologies": []
+  },
+  {
+    "name": "job-apply",
+    "full_name": "talpadeavi03/job-apply",
+    "description": "",
+    "html_url": "https://github.com/talpadeavi03/job-apply",
+    "stars": 1,
+    "language": "Python",
+    "topics": [],
+    "readme_summary": "# \u26a1 AetherApply \u2014 Autonomous Job Discovery & Auto-Applier Platform\n[![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)\n[![Playwright](https://img.shields.io/badge/Playwright-Chromium-green.svg)](https://playwright.dev/)\n[![Gemini MCP](https://img.shields.io/badge/AI-Google%20Gemini%202.5-orange.svg)](https://ai.google.dev/)\n[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-Automated%204h%20Cron-purple.svg)](https://github.com/features/actions)\n[![Discord Alerts](https://img.shields.io/badge/Discord-Realtime%20Radar-5865F2.svg)](https://discord.com/)\n**AetherApply** is an autonomous, cloud-native job search, intelligent matching, and auto-application platform. It is engineered to run unattended in the cloud via **GitHub Actions every 4 hours** (or locally on your workstation).\nIt parses alert emails and active job portals, extracts deep requirements from job descriptions, scores opportunities against your master resume using semantic NLP, fills out custom application questions using **Gemini Model Context Protocol (MCP)** reasoning, attaches your PDF resume, and submits applications automatically while sending real-time receipts to your **Discord channel**.\n---\n## Table of Contents\n- [Key Capabilities](#key-capabilities)\n- [Architecture & Flow](#architecture--flow)\n- [Supported Platforms](#supported-platforms)\n- [Prerequisites](#prerequisites)\n- [Quick Start: Local Setup](#quick-start-local-setup)\n- [Candidate Customization](#cand",
+    "key_technologies": []
+  },
+  {
+    "name": "auto-browser",
+    "full_name": "talpadeavi03/auto-browser",
+    "description": "Anti-Detect Job RPA Suite & MCP Server for Naukri and LinkedIn",
+    "html_url": "https://github.com/talpadeavi03/auto-browser",
+    "stars": 1,
+    "language": "Python",
+    "topics": [],
+    "readme_summary": "# \ud83d\ude80 Auto-Browser 2.0 & Aether CareerOS\n### Autonomous Multi-Platform Recruitment Operating System \u2022 100% Free Cloud Architecture \u2022 Powered by FastMCP & SLM Engine v2\n[![CI/CD 24/7 Cloud Automation](https://github.com/talpadeavi03/auto-browser/actions/workflows/job-automation.yml/badge.svg?branch=2.0)](https://github.com/talpadeavi03/auto-browser/actions)\n[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)\n[![Playwright Stealth](https://img.shields.io/badge/Browser-Playwright%20Stealth-2EAD33.svg?logo=playwright&logoColor=white)](https://playwright.dev/)\n[![Compute Cost](https://img.shields.io/badge/Cloud%20Compute-%240.00%20(100%25%20Free)-success.svg)](#-zero-cost-free-cloud-infrastructure)\n[![Protocol](https://img.shields.io/badge/Protocol-FastMCP%20JSON--RPC-00C7B7.svg)](#-fastmcp-server-architecture)\n[![Dataset](https://img.shields.io/badge/Continuous%20Dataset-386%2B%20Verified%20Q%26A-orange.svg)](#-continuous-mlops--slm-flywheel)\n[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/talpadeavi03/auto-browser/blob/2.0/notebooks/train_colab.ipynb)\n**Auto-Browser 2.0** is an enterprise-grade autonomous recruitment operating system running **100% in the cloud on free-tier infrastructure ($0.00 compute spend)**. It discovers jobs across 9 platforms, monitors incoming recruiter emails via Gmail, analyzes requirements using semantic cross-enco",
+    "key_technologies": []
+  },
+  {
+    "name": "dual-monitor",
+    "full_name": "talpadeavi03/dual-monitor",
+    "description": "duplicate on old monitor",
+    "html_url": "https://github.com/talpadeavi03/dual-monitor",
+    "stars": 0,
+    "language": "Python",
+    "topics": [],
+    "readme_summary": "# Dual-Monitor \ud83d\udda5\ufe0f\u26a1\n[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)\n[![Platform: Linux](https://img.shields.io/badge/Platform-Linux-blue.svg)](https://www.kernel.org)\n[![Wayland / X11](https://img.shields.io/badge/Display-Wayland%20%7C%20X11-green.svg)](https://wayland.freedesktop.org)\n[![Framerate: 60 FPS](https://img.shields.io/badge/Framerate-60%20FPS%20Locked-success.svg)](https://github.com/talpadeavi03/dual-monitor)\n[![Latency: ~1ms](https://img.shields.io/badge/Decode%20Latency-~1ms%20SIMD-orange.svg)](https://github.com/talpadeavi03/dual-monitor)\n**Dual-Monitor** is a bare-metal, ultra-low-latency Linux second-screen utility designed to turn any spare Linux laptop or desktop into a smooth, zero-bloat extended monitor over a direct Ethernet cable or local network.\nSpecifically tested, engineered, and optimized for:\n* **Host Laptop:** Modern Wayland compositors (e.g., **HP Pavilion on elementary OS 8 / GNOME / Ubuntu 24.04**).\n* **Client Laptop:** Legacy, low-spec hardware (e.g., **Dell Vostro 1015 on Arch Linux with Intel Core 2 Duo & GMA 4500MHD graphics**).\n* **Connection:** Direct point-to-point RJ-45 Ethernet cable (no router, switch, or DHCP server required).\n---\n## \ud83d\ude80 Why \"Bare-Metal\"? (The Engineering Details)\nMost wireless display solutions (such as Deskreen, spacedesk, or generic VNC) rely on heavy software stacks like Electron, WebRTC, Chromium browsers, or generic H.264 software decoders.\nOn older cli",
+    "key_technologies": []
+  },
+  {
+    "name": "test-mcp",
+    "full_name": "talpadeavi03/test-mcp",
+    "description": "mcp from scratch",
+    "html_url": "https://github.com/talpadeavi03/test-mcp",
+    "stars": 1,
+    "language": "Python",
+    "topics": [],
+    "readme_summary": "",
+    "key_technologies": []
+  },
+  {
+    "name": "AetherOS-mini",
+    "full_name": "talpadeavi03/AetherOS-mini",
+    "description": "",
+    "html_url": "https://github.com/talpadeavi03/AetherOS-mini",
+    "stars": 1,
+    "language": "C",
+    "topics": [],
+    "readme_summary": "# AetherOS: AI-Native Operating System (Arch Linux + Hyprland + Hyprdots)\n**AetherOS** is an AI-Native 64-bit operating system combining a modern **Arch Linux** base with the **Hyprland** Wayland compositor styled after [Hyprdots](https://github.com/prasanthrangan/hyprdots.git), and the **Kernel Model Context Protocol (MCP) Daemon & SLM Intelligence Core (`aether-mcpd`)**.\n---\n## \ud83d\udcf8 Desktop Preview\n---\n## \ud83c\udf1f Highlights\n- **Ambient Sensory Pipeline (Phase 2)**:\n- **Vision Engine (`aether-visiond`)**: Real-time biometric verification, gaze vector tracking, Eye Aspect Ratio (EAR) blink rate & posture monitoring.\n- **Voice Intelligence (`aether-voiced`)**: Low-latency neural and phonetic speech synthesis (`espeak-ng`), wake-word activity, and voice mode controls.\n- **Vector Memory (`aether-memd`)**: Persistent SQLite vector vault with cosine similarity retrieval and user/system Knowledge Graph.\n- **Micro-Intent Router (`aether-intentd`)**: Sub-15ms deterministic natural language intent resolution mapping speech or text to kernel and system actions.\n- **Hyprdots Aesthetic**: Catppuccin Mocha / Ros\u00e9 Pine color scheme, 10px rounded corners, dual-pass frosted glass blur, 45-degree border gradients (`rgba(ca9ee6ff) rgba(f2d5cfff)`), and smooth bezier animations.\n- **Floating Capsule Waybar**: Modular pill-style bar with workspace switcher, date/time, live CPU/RAM metrics, active **`\udb80\ude08 Vision Active`** sensory pill, and **`\udb81\udea9 AI Copilot`** status indicator.\n- **Rofi Application Launcher**:",
+    "key_technologies": []
+  },
+  {
+    "name": "intro",
+    "full_name": "talpadeavi03/intro",
+    "description": "retro-minecraft",
+    "html_url": "https://github.com/talpadeavi03/intro",
+    "stars": 1,
+    "language": "HTML",
+    "topics": [],
+    "readme_summary": "https://talpadeavi03.github.io/intro/index.html",
+    "key_technologies": []
+  },
+  {
+    "name": "learning-bot",
+    "full_name": "talpadeavi03/learning-bot",
+    "description": "learning-tracker-bot",
+    "html_url": "https://github.com/talpadeavi03/learning-bot",
+    "stars": 1,
+    "language": "HTML",
+    "topics": [],
+    "readme_summary": "# \ud83c\udf0c AETHER OS (JARVIS NEXUS)\n[https://learning-bot.talpadeavi0303.workers.dev]\nThe Personal AI Operating System > Behavior Tracking \u00b7 Flow Prediction \u00b7 Productivity Intelligence > Status: v3.0 - Production Ready | Cost: $0.00/mo | Updated: April 2026\n\ud83d\ude80 System Overview\nAETHER OS is a self-hosted, personal intelligence layer built entirely on Cloudflare's Free Tier and GitHub Actions. It transforms your digital exhaust (messages, commits, logs) into actionable flow-state predictions and automated life-management.\n\ud83d\udee0\ufe0f The Zero-Cost Tech Stack\nBrain: Cloudflare Workers (Llama 3 8B, Whisper, LLaVA 1.5)\nMemory: Cloudflare KV (Real-time) + GitHub (Long-term CSV/Parquet)\nInterface: Telegram Bot + PWA Dashboard (Cloudflare Pages)\nEngine: Python ML Pipeline (RandomForest / GBM) via GitHub Actions\nObservability: MLflow via DagsHub\n\ud83c\udfd7\ufe0f Architecture & Data Flow\nAETHER operates on a \"Capture-Process-Predict\" loop.\nThe Lifecycle of an Event:\nIngestion: User sends text, voice, or image via Telegram or pushes code to GitHub.\nNLP Extraction: Llama 3 parses the input into 22 behavioral features (Energy, Stress, Focus, etc.).\nStorage: Raw data is cached in Cloudflare KV.\nThe Nightly Brain: GitHub Actions pulls KV data, runs the ML Pipeline, trains models, and pushes a fresh dashboard.json back to the UI.\n\ud83e\udde0 Machine Learning Capabilities\nAETHER doesn't just log; it predicts.\nModel\tPurpose\tArchitecture\tAccuracy\nFlow Classifier\tPredicts current state (FLOW, ANXIETY, RECOVERY)\tRandomForest\t98.9% (CV)\nE",
+    "key_technologies": []
+  },
+  {
+    "name": "televerse",
+    "full_name": "talpadeavi03/televerse",
+    "description": "",
+    "html_url": "https://github.com/talpadeavi03/televerse",
+    "stars": 1,
+    "language": "TypeScript",
+    "topics": [],
+    "readme_summary": "---\ntitle: TeleVerse\nemoji: \ud83c\udf0c\ncolorFrom: indigo\ncolorTo: purple\nsdk: docker\napp_port: 7860\npinned: false\n---\n# TeleVerse \ud83c\udf0c\n> **Telegram-powered cloud file manager** \u2014 store unlimited files in your own Telegram account with an intelligent AI-enhanced manager UI.\n[![CI Pipeline](https://github.com/talpadeavi03/televerse/actions/workflows/ci.yml/badge.svg)](https://github.com/talpadeavi03/televerse/actions/workflows/ci.yml)\n[![Deployment Status](https://img.shields.io/badge/HF_Space-Live-success?logo=huggingface&color=FFD21E)](https://talpadeavi20-televerse.hf.space)\n[![Platform Version](https://img.shields.io/badge/version-v1.0.0--bp%20%7C%20Phase%201-blue.svg)](file:///home/sudo69/devops-core/televerse/mds/Phase1_Foundation.md)\n[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)\nTeleVerse operates as a custom third-party messaging client utilizing the **Telegram MTProto Client API** via **GramJS** in Node.js. By connecting their own Telegram accounts, users gain unlimited storage directly inside their own personal \"Saved Messages\" channel, enjoying total privacy and control.\n---\n## \ud83d\ude80 Release Tracks & Versioning\nWe utilize explicit versioning milestones to track development phases and support reliable Quality Assurance checks:\n### \ud83d\udfe2 Phase 1: Foundation \u2014 `v1.0.0-bp` (Baseline Prototype)\n*Status: **Released & Operational** | Live Environment: [https://talpadeavi20-televerse.hf.space](https://talpadeavi20-televerse.hf.space)*\n* **Visual Identity & Shel",
+    "key_technologies": []
+  },
+  {
+    "name": "football-ml",
+    "full_name": "talpadeavi03/football-ml",
+    "description": "training ml model as of now",
+    "html_url": "https://github.com/talpadeavi03/football-ml",
+    "stars": 1,
+    "language": "Python",
+    "topics": [],
+    "readme_summary": "Game logic is wrong while sorting Team  A and Team B as the old logic was at the start of match the teams seperated at the center line was the input of the faces.\nI didnt have enough data to feed to train the ML as of now for accuracy.",
     "key_technologies": []
   }
 ]
