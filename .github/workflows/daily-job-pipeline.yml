@@ -48,13 +48,14 @@ jobs:
       LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
       NAUKRI_EMAIL: ${{ secrets.NAUKRI_EMAIL }}
       NAUKRI_PASSWORD: ${{ secrets.NAUKRI_PASSWORD }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
       GITHUB_USERNAME: "talpadeavi03"
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up Python 3.12
