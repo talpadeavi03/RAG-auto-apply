@@ -270,6 +270,18 @@
       "metadata": {
         "section": "education"
       }
+    },
+    {
+      "doc_id": "github_repo_defender-linux",
+      "source_type": "github_repo",
+      "title": "GitHub Repo: defender-linux (Shell)",
+      "content": "Project Name: defender-linux\nLanguage: Shell\nStars: 0\nDescription: deb file for a test defender script to show high alerts and also the dashboard\nURL: https://github.com/talpadeavi03/defender-linux",
+      "metadata": {
+        "name": "defender-linux",
+        "language": "Shell",
+        "stars": 0,
+        "url": "https://github.com/talpadeavi03/defender-linux"
+      }
     }
   ]
 }

@@ -154,12 +154,12 @@
     "key_technologies": []
   },
   {
-    "name": "job-bot",
-    "full_name": "talpadeavi03/job-bot",
-    "description": "",
-    "html_url": "https://github.com/talpadeavi03/job-bot",
+    "name": "defender-linux",
+    "full_name": "talpadeavi03/defender-linux",
+    "description": "deb file for a test defender script to show high alerts and also the dashboard",
+    "html_url": "https://github.com/talpadeavi03/defender-linux",
     "stars": 0,
-    "language": "JavaScript",
+    "language": "Shell",
     "topics": [],
     "readme_summary": "",
     "key_technologies": []
