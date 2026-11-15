@@ -18,58 +18,54 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
         self.user_data_dir = DATA_DIR / "browser_sessions" / "linkedin"
 
     def search_jobs(self, keywords: List[str], locations: List[str], limit: int = 15) -> List[JobPost]:
-        """Search LinkedIn jobs with Easy Apply filter enabled."""
+        """Search LinkedIn jobs using resilient HTTP parsing with Easy Apply filter enabled."""
+        import requests
+        from bs4 import BeautifulSoup
+
         jobs: List[JobPost] = []
         target_kw = keywords[0] if keywords else "Cloud Engineer"
         kw = urllib.parse.quote(target_kw)
         loc = urllib.parse.quote(locations[0] if locations else "Pune")
-        # f_LF=f_AL corresponds to Easy Apply filter on LinkedIn
         search_url = f"https://www.linkedin.com/jobs/search/?keywords={kw}&location={loc}&f_AL=true"
-        
-        self.user_data_dir.mkdir(parents=True, exist_ok=True)
-        is_ci = os.getenv("CI", "false").lower() == "true" or os.getenv("HEADLESS", "false").lower() == "true" or not os.getenv("DISPLAY")
-        headless = True if is_ci else settings.config_data.get("general", {}).get("headless_browser", False)
+        print(f"[LinkedIn Engine] Fetching jobs via endpoint: {search_url}")
 
-        with sync_playwright() as p:
-            browser = p.chromium.launch_persistent_context(
-                user_data_dir=str(self.user_data_dir),
-                headless=headless,
-                args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
-            )
-            page = browser.new_page()
-            try:
-                print(f"[LinkedIn Engine] Navigating to search: {search_url}")
-                page.goto(search_url, timeout=35000)
-                page.wait_for_timeout(4000)
+        try:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+            }
+            resp = requests.get(search_url, headers=headers, timeout=15)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.text, "html.parser")
+                cards = soup.select("div.base-card, li div.base-search-card")
+                print(f"[LinkedIn Engine] Found {len(cards)} live job postings on page.")
 
-                # Locate job cards (both logged-in and guest markup)
-                card_locators = page.locator("div.base-card, li.jobs-search-results__list-item, div.job-card-container, div.base-search-card").all()
-                print(f"[LinkedIn Engine] Found {len(card_locators)} job cards on page.")
-
-                for idx, card in enumerate(card_locators[:limit]):
+                for idx, card in enumerate(cards[:limit]):
                     try:
-                        title_elem = card.locator("a.base-card__full-link, a.job-card-list__title--link, a.job-card-container__link, h3.base-search-card__title").first
-                        if not title_elem.is_visible():
+                        title_el = card.select_one("h3.base-search-card__title, a.base-card__full-link")
+                        link_el = card.select_one("a.base-card__full-link, a")
+                        comp_el = card.select_one("h4.base-search-card__subtitle, a.job-card-container__primary-description")
+                        loc_el = card.select_one("span.job-search-card__location")
+
+                        if not title_el or not link_el:
                             continue
-                        title = title_elem.inner_text().strip()
-                        job_url = title_elem.get_attribute("href") or ""
-                        if job_url.startswith("/"):
-                            job_url = "https://www.linkedin.com" + job_url
 
-                        company_elem = card.locator("h4.base-search-card__subtitle, a.job-card-container__primary-description, div.job-card-container__primary-description").first
-                        company = company_elem.inner_text().strip() if company_elem.is_visible() else "Company"
+                        title = title_el.get_text(strip=True)
+                        job_url = link_el.get("href", "")
+                        if "?" in job_url:
+                            job_url = job_url.split("?")[0]
+                        if not job_url.startswith("http"):
+                            continue
 
-                        loc_elem = card.locator("span.job-search-card__location, .job-card-container__metadata-wrapper li").first
-                        location = loc_elem.inner_text().strip() if loc_elem.is_visible() else "Pune"
+                        company = comp_el.get_text(strip=True) if comp_el else "Company"
+                        location = loc_el.get_text(strip=True) if loc_el else "Pune"
 
-                        # Extract Job ID
                         job_id = f"li_{idx}_{int(time.time())}"
                         if "view/" in job_url:
                             job_id = "li_" + job_url.split("view/")[1].split("/")[0].split("?")[0]
-                        elif "currentJobId=" in job_url:
-                            job_id = "li_" + job_url.split("currentJobId=")[1].split("&")[0]
 
-                        # Evaluate Match Score with RAG directly on title and company
+                        # Calculate RAG match score
                         score, matched_skills, _ = self.vector_store.match_job(title, f"{title} {company}", self.profile.skills)
 
                         job_post = JobPost(
@@ -87,12 +83,10 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         jobs.append(job_post)
                         print(f"  [LinkedIn Match] {title} @ {company} (Score: {int(score*100)}%)")
                     except Exception as e:
-                        print(f"  [LinkedIn Card Error] {e}")
                         continue
-            except Exception as e:
-                print(f"[LinkedIn Search Warning] {e}")
-            finally:
-                browser.close()
+                return jobs
+        except Exception as e:
+            print(f"[LinkedIn Search Warning via HTTP] {e}")
 
         return jobs
 
@@ -110,12 +104,15 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
         is_ci = os.getenv("CI", "false").lower() == "true" or os.getenv("HEADLESS", "false").lower() == "true" or not os.getenv("DISPLAY")
         headless = True if is_ci else settings.config_data.get("general", {}).get("headless_browser", False)
 
+        state_file = self.user_data_dir / "linkedin_state.json"
+        launch_args = {
+            "user_data_dir": str(self.user_data_dir),
+            "headless": headless,
+            "args": ["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
+        }
+
         with sync_playwright() as p:
-            browser = p.chromium.launch_persistent_context(
-                user_data_dir=str(self.user_data_dir),
-                headless=headless,
-                args=["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-dev-shm-usage"]
-            )
+            browser = p.chromium.launch_persistent_context(**launch_args)
             page = browser.new_page()
             try:
                 # 1. Ensure authenticated session if credentials exist
@@ -127,8 +124,10 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 page.wait_for_timeout(3000)
 
                 # 3. Locate visible Apply Button
-                apply_btn = page.locator(".top-card-layout__cta-container button:has-text('Apply'), .top-card-layout__cta-container a:has-text('Apply'), button.jobs-apply-button:visible, button.apply-button:visible, button:has-text('Easy Apply'):visible, a:has-text('Apply'):visible").first
-                if not apply_btn.is_visible():
+                candidates = page.locator(".top-card-layout__cta-container button, .top-card-layout__cta-container a, button.apply-button, button.jobs-apply-button, button:has-text('Apply'), a:has-text('Apply')").all()
+                visible_apply = [b for b in candidates if b.is_visible() and "apply" in b.inner_text().lower()]
+
+                if not visible_apply:
                     print(f"[LinkedIn] No direct apply button visible for {job.title}. Checking external portal links...")
                     ext_link = page.locator("a[href*='workday'], a[href*='greenhouse'], a[href*='lever.co'], a[href*='taleo'], a[href*='ashby']").first
                     if ext_link.is_visible():
@@ -137,18 +136,19 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         return self.external_handler.handle_redirect(job, interactive=False)
                     return False
 
+                apply_btn = visible_apply[0]
                 btn_text = apply_btn.inner_text().lower()
                 href = apply_btn.get_attribute("href") or ""
                 
-                # Check for External redirect
-                if "easy apply" not in btn_text and (href.startswith("http") or "external" in btn_text or btn_text.strip() == "apply"):
+                # Check for External redirect link
+                if "easy apply" not in btn_text and (href.startswith("http") or "external" in btn_text):
                     print(f"[LinkedIn] External portal redirect detected: '{btn_text}' -> {href or 'popup'}")
                     if href.startswith("http") and "linkedin.com" not in href:
                         job.external_url = href
                     else:
                         try:
                             with page.expect_popup(timeout=8000) as popup_info:
-                                apply_btn.click()
+                                apply_btn.click(force=True)
                             ext_page = popup_info.value
                             job.external_url = ext_page.url
                             ext_page.close()
@@ -157,9 +157,30 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                     job.apply_type = ApplyType.EXTERNAL_REDIRECT
                     return self.external_handler.handle_redirect(job, interactive=False)
 
-                # Open Easy Apply modal
-                apply_btn.click()
+                # Click Apply button (using force=True to bypass transparent overlays)
+                print(f"[LinkedIn] Clicking apply button for {job.title}...")
+                try:
+                    with page.expect_popup(timeout=4000) as popup_info:
+                        apply_btn.click(force=True)
+                    popup = popup_info.value
+                    if "linkedin.com" not in popup.url:
+                        job.external_url = popup.url
+                        job.apply_type = ApplyType.EXTERNAL_REDIRECT
+                        popup.close()
+                        return self.external_handler.handle_redirect(job, interactive=False)
+                    popup.close()
+                except Exception:
+                    apply_btn.click(force=True)
+
                 page.wait_for_timeout(2000)
+
+                # Check if Easy Apply modal appeared
+                modal = page.locator("div.jobs-easy-apply-modal, div[role='dialog']").first
+                if not modal.is_visible():
+                    print(f"[LinkedIn] Easy Apply modal did not appear (guest session or sign-in required).")
+                    print(f"Preparing application dossier for Antigravity CLI assist...")
+                    job.apply_type = ApplyType.EXTERNAL_REDIRECT
+                    return self.external_handler.handle_redirect(job, interactive=False)
 
                 # Iterate through multi-step dialog
                 max_steps = 10
@@ -172,7 +193,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         page.locator("button:has-text('Submit application')")
                     ).first
                     if submit_btn.is_visible():
-                        submit_btn.click()
+                        submit_btn.click(force=True)
                         page.wait_for_timeout(3000)
                         print(f"🎉 [LinkedIn] Successfully submitted Easy Apply for {job.title} at {job.company}!")
                         
@@ -204,7 +225,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                     ).or_(page.locator("button:has-text('Review')")).first
 
                     if next_btn.is_visible():
-                        next_btn.click()
+                        next_btn.click(force=True)
                         page.wait_for_timeout(1500)
                     else:
                         break
