@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 import shutil
 from pathlib import Path
@@ -91,10 +92,15 @@ Use `agy` to:
     def assist_application(self, job: JobPost, profile: CandidateProfile, rag_context: str, interactive: bool = True) -> bool:
         """
         Launches the Antigravity CLI (agy) to assist with the external application.
+        Automatically switches to non-interactive mode in CI environments.
         """
         dossier_path = self.prepare_application_dossier(job, profile, rag_context)
         print(f"\n[Antigravity CLI Assistant] Prepared application dossier: {dossier_path}")
         print(f"[Antigravity CLI Assistant] Redirect URL: {job.external_url}")
+
+        is_ci = os.getenv("CI", "false").lower() == "true" or not sys.stdin.isatty()
+        if is_ci:
+            interactive = False
 
         if not self.is_available():
             print(f"[Warning] Antigravity CLI binary not found at '{self.agy_path}'.")
@@ -112,14 +118,16 @@ Use `agy` to:
         try:
             if interactive:
                 print(f"[Antigravity CLI] Launching interactive assistant session (`agy -i`)...")
-                # Run agy with interactive prompt
                 cmd = [self.agy_path, "-i", prompt]
                 subprocess.run(cmd)
             else:
-                print(f"[Antigravity CLI] Running prompt query (`agy -p`)...")
+                print(f"[Antigravity CLI] Running non-interactive assistance mode (`agy -p`)...")
                 cmd = [self.agy_path, "-p", prompt]
-                result = subprocess.run(cmd, capture_output=True, text=True)
-                print(result.stdout)
+                try:
+                    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+                    print(result.stdout)
+                except subprocess.TimeoutExpired:
+                    print("[Antigravity CLI] Execution timed out or awaiting auth. Dossier preserved.")
             return True
         except Exception as e:
             print(f"[Error] Failed to execute Antigravity CLI: {e}")

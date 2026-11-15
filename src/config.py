@@ -17,9 +17,10 @@ class Settings:
         self.profile = self._load_profile()
 
     def _load_settings(self) -> Dict[str, Any]:
+        is_ci = os.getenv("CI", "false").lower() == "true" or os.getenv("HEADLESS", "false").lower() == "true"
         default_settings = {
             "general": {
-                "headless_browser": False,
+                "headless_browser": is_ci,
                 "browser_timeout_ms": 30000,
                 "max_applications_per_run": 25,
                 "min_match_score": 0.65,

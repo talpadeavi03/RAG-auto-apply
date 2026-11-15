@@ -1,0 +1,158 @@
+name: Daily Job Pipeline & Antigravity CLI Assistant
+
+on:
+  schedule:
+    # 10:00 AM & 5:30 PM IST (Mon-Fri) - Peak recruiter active hours
+    - cron: '30 4 * * 1-5'
+    - cron: '0 12 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Target Platform'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - both
+          - linkedin
+          - naukri
+      mode:
+        description: 'Execution Mode'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - profile-update-only
+          - apply-only
+      limit:
+        description: 'Max applications per platform'
+        required: false
+        default: '10'
+      min_score:
+        description: 'Minimum RAG match score (0.0 - 1.0)'
+        required: false
+        default: '0.65'
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    env:
+      CI: "true"
+      HEADLESS: "true"
+      LINKEDIN_EMAIL: ${{ secrets.LINKEDIN_EMAIL }}
+      LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
+      NAUKRI_EMAIL: ${{ secrets.NAUKRI_EMAIL }}
+      NAUKRI_PASSWORD: ${{ secrets.NAUKRI_PASSWORD }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_USERNAME: "talpadeavi03"
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Antigravity CLI (agy)
+        run: |
+          echo "=== Installing Antigravity CLI ==="
+          curl -fsSL https://antigravity.google/cli/install.sh | bash
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.local/bin:$PATH"
+          echo "Verified Antigravity CLI: $(which agy) version $(agy --version)"
+
+      - name: Install Python Dependencies & Playwright
+        run: |
+          pip install --upgrade pip
+          pip install -e .
+          pip install pypdf
+          playwright install --with-deps chromium
+
+      - name: Ingest RAG Knowledge Base (Resume & GitHub)
+        run: |
+          echo "=== Ingesting Candidate Knowledge Base into RAG ==="
+          rag-apply ingest --github talpadeavi03 --resume data/resumes/avinash_talpade_resume.md
+
+      - name: Auto-Update & Refresh Profiles (LinkedIn & Naukri)
+        if: ${{ github.event.inputs.mode != 'apply-only' }}
+        run: |
+          echo "=== Refreshing Profiles (Naukri Timestamp Bump & LinkedIn Sync) ==="
+          TARGET_PLATFORM="${{ github.event.inputs.platform || 'both' }}"
+          rag-apply profile update --platform "$TARGET_PLATFORM"
+
+      - name: Run Autonomous Job Applications
+        if: ${{ github.event.inputs.mode != 'profile-update-only' }}
+        run: |
+          echo "=== Executing Job Applications (Naukri Direct & LinkedIn Easy Apply) ==="
+          TARGET_PLATFORM="${{ github.event.inputs.platform || 'both' }}"
+          LIMIT="${{ github.event.inputs.limit || '10' }}"
+          MIN_SCORE="${{ github.event.inputs.min_score || '0.65' }}"
+          rag-apply apply --platform "$TARGET_PLATFORM" --limit "$LIMIT" --min-score "$MIN_SCORE"
+
+      - name: Generate Job Run Summary & Step Summary
+        if: always()
+        run: |
+          echo "### 🚀 RAG-AG-Apply Job Pipeline Run Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Candidate:** Avinash Vishnu Talpade" >> $GITHUB_STEP_SUMMARY
+          echo "- **GitHub Mined:** [talpadeavi03](https://github.com/talpadeavi03)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Antigravity CLI Version:** \`$(agy --version 2>/dev/null || echo 'Installed')\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          python3 -c "
+          import os
+          from src.tracker.database import ApplicationTracker
+          tracker = ApplicationTracker()
+          stats = tracker.get_summary_stats()
+          redirects = tracker.get_redirected_jobs(pending_only=False)
+          
+          summary_md = '#### 📊 Application Metrics\n'
+          summary_md += '| Status | Count |\n| :--- | :--- |\n'
+          summary_md += f'| **Total Processed** | **{stats[\"total\"]}** |\n'
+          for st, cnt in stats[\"breakdown\"].items():
+              summary_md += f'| {st.capitalize()} | {cnt} |\n'
+              
+          if redirects:
+              summary_md += '\n#### 🔗 External Redirects Assisted by Antigravity CLI\n'
+              summary_md += '| Company | Job Title | Status | Link |\n| :--- | :--- | :--- | :--- |\n'
+              for r in redirects[:15]:
+                  summary_md += f'| {r.company} | {r.title} | {r.status.value} | [Application Portal]({r.external_url or r.job_url}) |\n'
+          
+          with open(os.getenv('GITHUB_STEP_SUMMARY'), 'a') as f:
+              f.write(summary_md)
+          " || true
+
+      - name: Upload Application Dossiers & Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: job-applications-dossiers-${{ github.run_id }}
+          path: |
+            data/applications/
+            data/tracker.db
+            data/vector_store/index.json
+          retention-days: 30
+
+      - name: Persist Application Tracking Data
+        if: always()
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/tracker.db data/vector_store/index.json data/github_cache/ || true
+          if git diff --staged --quiet; then
+            echo "No state changes to commit."
+          else
+            git commit -m "Auto-update job application tracking state [skip ci]"
+            git push origin HEAD:${{ github.ref }} || echo "Push skipped or no changes"
+          fi

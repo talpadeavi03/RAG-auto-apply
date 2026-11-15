@@ -1,0 +1,94 @@
+name: Assist External Job Application
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'External Application Portal URL (Workday, Greenhouse, Lever, Ashby, etc.)'
+        required: true
+        type: string
+      company:
+        description: 'Company Name'
+        required: false
+        default: 'Target Company'
+        type: string
+      title:
+        description: 'Job Title'
+        required: false
+        default: 'Cloud Engineer / DevOps Engineer'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  assist-portal:
+    runs-on: ubuntu-latest
+
+    env:
+      CI: "true"
+      HEADLESS: "true"
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Antigravity CLI (agy)
+        run: |
+          curl -fsSL https://antigravity.google/cli/install.sh | bash
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.local/bin:$PATH"
+          agy --version
+
+      - name: Install Python Dependencies & Playwright
+        run: |
+          pip install --upgrade pip
+          pip install -e .
+          pip install pypdf
+          playwright install --with-deps chromium
+
+      - name: Ingest RAG Knowledge Base
+        run: |
+          rag-apply ingest --github talpadeavi03 --resume data/resumes/avinash_talpade_resume.md
+
+      - name: Run Antigravity CLI External Application Assistant
+        run: |
+          echo "=== Generating Application Dossier & Invoking Antigravity CLI ==="
+          rag-apply assist \
+            --url "${{ github.event.inputs.url }}" \
+            --company "${{ github.event.inputs.company }}" \
+            --title "${{ github.event.inputs.title }}"
+
+      - name: Publish Step Summary
+        if: always()
+        run: |
+          echo "### 🎯 External Application Assistant Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Company:** ${{ github.event.inputs.company }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Position:** ${{ github.event.inputs.title }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **External Portal:** [Apply Here](${{ github.event.inputs.url }})" >> $GITHUB_STEP_SUMMARY
+          echo "- **Assistant Engine:** Antigravity CLI (\`$(agy --version 2>/dev/null || echo 'v1.5.9')\`)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Find generated dossier and render preview
+          DOSSIER=$(find data/applications -name "application_dossier.md" | sort -r | head -n 1)
+          if [ -n "$DOSSIER" ] && [ -f "$DOSSIER" ]; then
+            echo "#### 📄 Generated Application Dossier & Cover Letter" >> $GITHUB_STEP_SUMMARY
+            echo '```markdown' >> $GITHUB_STEP_SUMMARY
+            cat "$DOSSIER" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload Dossier Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-dossier-${{ github.run_id }}
+          path: data/applications/
+          retention-days: 30

@@ -152,6 +152,38 @@ rag-apply status
 
 ---
 
+## ⚡ GitHub Actions Automation
+
+The entire pipeline runs autonomously via GitHub Actions.
+
+### Configured Workflows
+
+1. **`daily-job-pipeline.yml`**:
+   - **Trigger:** Scheduled twice daily (Mon-Fri 10:00 AM & 5:30 PM IST) and on manual dispatch.
+   - **Actions:**
+     - Bootstraps Antigravity CLI (`agy`) directly on the Ubuntu runner via `curl -fsSL https://antigravity.google/cli/install.sh | bash`.
+     - Ingests latest GitHub repositories and resume into the RAG index.
+     - Automatically updates & refreshes LinkedIn and Naukri profile timestamps.
+     - Runs automated job applications for Naukri Direct & LinkedIn Easy Apply.
+     - Prepares application dossiers for external redirects and assists with `agy`.
+     - Uploads artifacts (`data/applications/`, `data/tracker.db`) and publishes a GitHub Step Summary.
+     - Persists tracking state back to the repository.
+
+2. **`assist-external-portal.yml`**:
+   - **Trigger:** Manual dispatch with `url`, `company`, and `title`.
+   - **Actions:**
+     - Prepares tailored ATS application answers, tailored pitch, and dossier.
+     - Runs the Antigravity CLI assistant against the portal.
+     - Displays the complete dossier in the GitHub Step Summary.
+
+### Repository Secrets Configuration
+To enable browser login on GitHub Actions, add these repository secrets in **Settings > Secrets and variables > Actions**:
+- `LINKEDIN_EMAIL` & `LINKEDIN_PASSWORD`
+- `NAUKRI_EMAIL` & `NAUKRI_PASSWORD`
+- `GITHUB_TOKEN` (automatically provided by GitHub Actions)
+
+---
+
 ## 🔄 Daily Automation
 
 Run the included automated daily script or schedule it via cron:
