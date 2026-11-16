@@ -75,6 +75,14 @@ class ApplicationTracker:
             ))
             conn.commit()
 
+    def has_applied(self, job_id: str, job_url: str = "") -> bool:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            num_id = job_id.replace("li_", "").split("-")[-1] if "-" in job_id else job_id.replace("li_", "")
+            query = "SELECT 1 FROM applications WHERE (job_id = ? OR job_id = ? OR job_url LIKE ?) AND status = 'applied'"
+            cursor.execute(query, (job_id, f"li_{num_id}", f"%{num_id}%"))
+            return cursor.fetchone() is not None
+
     def get_applied_jobs(self) -> List[ApplicationRecord]:
         with self._get_connection() as conn:
             cursor = conn.cursor()

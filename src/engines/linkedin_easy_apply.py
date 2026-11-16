@@ -41,7 +41,9 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 cards = soup.select("div.base-card, li div.base-search-card")
                 print(f"[LinkedIn Engine] Found {len(cards)} live job postings on page.")
 
-                for idx, card in enumerate(cards[:limit]):
+                for idx, card in enumerate(cards):
+                    if len(jobs) >= limit:
+                        break
                     try:
                         title_el = card.select_one("h3.base-search-card__title, a.base-card__full-link")
                         link_el = card.select_one("a.base-card__full-link, a")
@@ -63,8 +65,14 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         location = loc_el.get_text(strip=True) if loc_el else "Pune"
 
                         job_id = f"li_{idx}_{int(time.time())}"
+                        raw_slug = ""
                         if "view/" in job_url:
-                            job_id = "li_" + job_url.split("view/")[1].split("/")[0].split("?")[0]
+                            raw_slug = job_url.split("view/")[1].split("/")[0].split("?")[0]
+                            num_id = raw_slug.split("-")[-1] if "-" in raw_slug else raw_slug
+                            job_id = f"li_{num_id}"
+
+                        if self.tracker.has_applied(job_id, job_url):
+                            continue
 
                         # Calculate RAG match score
                         score, matched_skills, _ = self.vector_store.match_job(title, f"{title} {company}", self.profile.skills)
@@ -135,7 +143,18 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 target_url = job.job_url.replace("in.linkedin.com", "www.linkedin.com")
                 print(f"[LinkedIn] Navigating to job: {target_url}")
                 page.goto(target_url, timeout=35000, wait_until="domcontentloaded")
-                page.wait_for_timeout(3000)
+                page.wait_for_timeout(2500)
+
+                # Handle remember-me auto-login redirect if encountered
+                if "remember-me" in page.url:
+                    try:
+                        print("  [LinkedIn] Resolving auto-login redirect...")
+                        page.wait_for_function("() => !window.location.href.includes('remember-me')", timeout=15000)
+                        page.wait_for_timeout(2000)
+                        if state_file.exists():
+                            context.storage_state(path=str(state_file))
+                    except Exception:
+                        pass
 
                 # 3. Locate visible Apply Button
                 candidates = page.locator("button[aria-label*='Easy Apply'], button:has-text('Easy Apply'), button.jobs-apply-button, button.apply-button, .top-card-layout__cta-container button, .top-card-layout__cta-container a, button:has-text('Apply'), a:has-text('Apply')").all()
@@ -184,6 +203,22 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 except Exception:
                     pass
 
+                # If clicking triggered remember-me auto login redirect
+                if "remember-me" in page.url:
+                    try:
+                        print("  [LinkedIn] Resolving auto-login redirect...")
+                        page.wait_for_function("() => !window.location.href.includes('remember-me')", timeout=15000)
+                        page.wait_for_timeout(2500)
+                        if state_file.exists():
+                            context.storage_state(path=str(state_file))
+                        # Click the newly revealed authenticated Easy Apply button
+                        easy_apply = page.locator("button.jobs-apply-button, button:has-text('Easy Apply')").first
+                        if easy_apply.is_visible():
+                            easy_apply.click(force=True)
+                            page.wait_for_timeout(2500)
+                    except Exception:
+                        pass
+
                 if popup_url and "linkedin.com" not in popup_url:
                     print(f"[LinkedIn] External career portal opened: {popup_url}")
                     job.external_url = popup_url
@@ -193,13 +228,11 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 page.wait_for_timeout(3000)
 
                 # Check if multi-step form appeared
-                dialog = page.locator("dialog").first
+                dialog = page.locator("dialog, div[role='dialog'], [aria-modal='true'], .jobs-easy-apply-modal").first
                 try:
                     dialog.wait_for(state="visible", timeout=6000)
                 except Exception:
                     pass
-                if not dialog.is_visible():
-                    dialog = page.locator("div[role='dialog'], [aria-modal='true'], .jobs-easy-apply-modal").first
                 container = dialog if dialog.is_visible() else page
 
                 form_active = (
@@ -216,7 +249,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 max_steps = 14
                 for step in range(max_steps):
                     print(f"  [LinkedIn Easy Apply] Processing application step {step + 1}...")
-                    dialog = page.locator("dialog").first
+                    dialog = page.locator("dialog, div[role='dialog'], [aria-modal='true'], .jobs-easy-apply-modal").first
                     container = dialog if dialog.is_visible() else page
 
                     # Check for Submit button FIRST (Review page / final step)
@@ -292,6 +325,9 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
 
                     # Check for Next / Review button
                     next_btn = container.locator("button:has-text('Review'), button[aria-label*='Review'], button:has-text('Next'), button[aria-label*='Continue to next step']").first
+                    if not next_btn.is_visible():
+                        next_btn = page.locator("button:has-text('Review'), button[aria-label*='Review'], button:has-text('Next'), button[aria-label*='Continue to next step']").first
+
                     if next_btn.is_visible():
                         btn_label = next_btn.inner_text().strip()
                         print(f"  [LinkedIn] Advancing with '{btn_label}' button...")
@@ -299,10 +335,13 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         next_btn.click(force=True)
                         page.wait_for_timeout(2500)
                     else:
+                        submit_check = page.locator("button:has-text('Submit application'), button[aria-label*='Submit application']").first
+                        if submit_check.is_visible():
+                            continue
                         break
 
-                print(f"[LinkedIn] Finished form steps for {job.title}.")
-                return True
+                print(f"[LinkedIn] Finished form steps for {job.title} without final submit.")
+                return False
             except Exception as e:
                 print(f"[LinkedIn Apply Error] {e}")
                 return False
@@ -372,6 +411,19 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 if is_typeahead and not is_required:
                     continue
 
+                # Fetch preceding sibling question text and attributes
+                preceding_q = inp.evaluate("""e => {
+                    let node = e;
+                    while (node && node.tagName !== "FORM" && node.tagName !== "DIALOG") {
+                        let prev = node.previousElementSibling;
+                        while (prev) {
+                            if (prev.innerText && prev.innerText.trim()) return prev.innerText.trim();
+                            prev = prev.previousElementSibling;
+                        }
+                        node = node.parentElement;
+                    }
+                    return "";
+                }""").lower()
                 input_id = inp.get_attribute("id") or ""
                 input_name = (inp.get_attribute("name") or "").lower()
                 aria_label = (inp.get_attribute("aria-label") or "").lower()
@@ -380,20 +432,24 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 # Fetch surrounding label / question text from DOM
                 lbl_text = inp.evaluate("e => e.closest('div.k4dlcw, fieldset, div.k4dl5v, form')?.innerText || ''").lower()
 
-                combined = f"{aria_label} {placeholder} {input_name} {lbl_text}".lower()
+                combined = f"{preceding_q} {aria_label} {placeholder} {input_name} {lbl_text}".lower()
 
                 if any(w in combined for w in ["phone", "mobile", "tel", "contact"]):
                     inp.fill("+91 8999285015")
                 elif any(w in combined for w in ["email"]):
                     inp.fill("talpadeavi0303@gmail.com")
+                elif any(w in combined for w in ["current ctc", "fixed"]):
+                    inp.fill("850000")
+                elif any(w in combined for w in ["expected ctc"]):
+                    inp.fill("1100000")
                 elif any(w in combined for w in ["financial", "gross", "salary", "compensation", "ctc", "expectation"]):
-                    inp.fill("85000")
+                    inp.fill("850000")
                 elif any(w in combined for w in ["location", "city", "country"]):
                     inp.fill("India, Pune")
-                elif any(w in combined for w in ["notice", "days"]):
+                elif any(w in combined for w in ["notice", "serving", "days"]):
                     inp.fill("15")
                 elif any(w in combined for w in ["experience", "years", "total"]):
-                    inp.fill("3.5")
+                    inp.fill("3")
                 elif inp.get_attribute("type") == "number":
                     inp.fill("3")
                 else:
@@ -467,8 +523,6 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
         processed_names = set()
         for r in radios:
             try:
-                if not r.is_visible():
-                    continue
                 name = r.get_attribute("name")
                 if not name or name in processed_names:
                     continue
@@ -478,17 +532,43 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 if any(gr.is_checked() for gr in group_radios):
                     continue
 
-                label = r.evaluate("e => e.closest('fieldset')?.querySelector('legend')?.innerText || e.closest('.form-group, div')?.innerText || ''").lower()
-                if any(w in label for w in ["sponsorship", "require visa", "criminal", "convicted"]):
-                    target = next((gr for gr in group_radios if gr.get_attribute("value") and "no" in gr.get_attribute("value").lower()), None)
-                else:
-                    target = next((gr for gr in group_radios if gr.get_attribute("value") and "yes" in gr.get_attribute("value").lower()), None)
+                # Question is either in r aria-label, legend, or preceding heading
+                q_text = (r.get_attribute("aria-label") or "").lower()
+                if not q_text:
+                    q_text = r.evaluate("""e => {
+                        let node = e;
+                        while (node && node.tagName !== "FORM" && node.tagName !== "DIALOG") {
+                            let legend = node.querySelector("legend")?.innerText || "";
+                            if (legend) return legend;
+                            let prev = node.previousElementSibling;
+                            while (prev) {
+                                if (prev.innerText && prev.innerText.trim()) return prev.innerText.trim();
+                                prev = prev.previousElementSibling;
+                            }
+                            node = node.parentElement;
+                        }
+                        return "";
+                    }""").lower()
+
+                is_negative = any(w in q_text for w in ["sponsorship", "require visa", "criminal", "convicted"])
+                target = None
+                for gr in group_radios:
+                    opt_text = gr.evaluate("e => e.parentElement?.parentElement?.innerText || e.closest('label')?.innerText || ''").strip().lower()
+                    gr_val = (gr.get_attribute("value") or "").lower()
+                    combined_gr = f"{opt_text} {gr_val}"
+                    if is_negative and "no" in combined_gr:
+                        target = gr
+                        break
+                    elif not is_negative and "yes" in combined_gr:
+                        target = gr
+                        break
 
                 if not target and group_radios:
                     target = group_radios[0]
 
                 if target:
-                    target.check(force=True)
+                    target.scroll_into_view_if_needed()
+                    target.evaluate("e => { if (!e.checked) e.click(); }")
             except Exception:
                 continue
 
