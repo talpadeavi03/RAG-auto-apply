@@ -7,9 +7,9 @@
   "github_username": "talpadeavi03",
   "portfolio_url": "https://talpadeavi03.github.io/intro",
   "years_of_experience": 3.5,
-  "notice_period_days": 15,
-  "current_ctc": "Negotiable / As per market",
-  "expected_ctc": "Competitive / As per role",
+  "notice_period_days": 0,
+  "current_ctc": "450000",
+  "expected_ctc": "750000",
   "current_company": "Accenture",
   "current_title": "Cloud Infrastructure Analyst",
   "skills": [
@@ -53,8 +53,10 @@
   "custom_qa": {
     "Are you comfortable working in a hybrid model?": "Yes, available in Pune or open to relocation / remote.",
     "Do you have experience with cloud platforms?": "Yes, 3.5 years of enterprise hands-on experience in Azure and AWS environments at Accenture.",
-    "Notice period": "15 days",
+    "Notice period": "Immediate joiner (0 days)",
+    "Current CTC": "450000",
+    "Expected CTC": "750000",
     "Current company": "Accenture",
-    "Total years of experience": "3.5"
+    "Total years of experience": "3"
   }
 }

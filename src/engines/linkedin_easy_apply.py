@@ -439,15 +439,15 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                 elif any(w in combined for w in ["email"]):
                     inp.fill("talpadeavi0303@gmail.com")
                 elif any(w in combined for w in ["current ctc", "fixed"]):
-                    inp.fill("850000")
+                    inp.fill("450000")
                 elif any(w in combined for w in ["expected ctc"]):
-                    inp.fill("1100000")
+                    inp.fill("750000")
                 elif any(w in combined for w in ["financial", "gross", "salary", "compensation", "ctc", "expectation"]):
-                    inp.fill("850000")
+                    inp.fill("450000")
                 elif any(w in combined for w in ["location", "city", "country"]):
                     inp.fill("India, Pune")
                 elif any(w in combined for w in ["notice", "serving", "days"]):
-                    inp.fill("15")
+                    inp.fill("0")
                 elif any(w in combined for w in ["experience", "years", "total"]):
                     inp.fill("3")
                 elif inp.get_attribute("type") == "number":
@@ -483,7 +483,7 @@ class LinkedInEasyApplyEngine(BaseJobEngine):
                         first_valid_val = val
 
                     if any(w in sel_label for w in ["notice", "availability"]):
-                        if any(k in txt for k in ["0-15", "immediate", "15"]):
+                        if any(k in txt for k in ["immediate", "0", "0-15", "15"]):
                             chosen_val = val
                             break
                     elif any(w in sel_label for w in ["learn about", "source", "where"]):

@@ -108,8 +108,8 @@ class RAGGenerator:
             if "day" in q_lower:
                 return str(self.profile.notice_period_days)
             elif "month" in q_lower:
-                return str(max(1, round(self.profile.notice_period_days / 30)))
-            return f"{self.profile.notice_period_days} days"
+                return "0" if self.profile.notice_period_days == 0 else str(max(1, round(self.profile.notice_period_days / 30)))
+            return "Immediate" if self.profile.notice_period_days == 0 else f"{self.profile.notice_period_days} days"
 
         # 3. Work Authorization / Sponsorship
         if any(w in q_lower for w in ["authorized to work", "legally authorized", "visa sponsorship", "sponsorship now or in the future"]):

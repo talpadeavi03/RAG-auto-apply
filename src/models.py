@@ -30,9 +30,9 @@ class CandidateProfile(BaseModel):
     github_username: str = ""
     portfolio_url: str = ""
     years_of_experience: float = 3.0
-    notice_period_days: int = 15
-    current_ctc: str = ""
-    expected_ctc: str = ""
+    notice_period_days: int = 0
+    current_ctc: str = "450000"
+    expected_ctc: str = "750000"
     current_company: str = ""
     current_title: str = "Software Engineer"
     skills: List[str] = Field(default_factory=list)
